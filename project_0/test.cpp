@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 #ifndef NUMT
-#define NUMT	         1	// number of threads to use -- do once for 1 and once for 4
+#define NUMT	         4	// number of threads to use -- do once for 1 and once for 4
 #endif
 
 #ifndef SIZE
