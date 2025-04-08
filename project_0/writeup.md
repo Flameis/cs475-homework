@@ -29,3 +29,7 @@ Fp = (4/3)*(0.5935)
 Fp = 0.791
 
 The parallel fraction of the code is approximately 0.791 or 79.1%, which is less than 1.0 as expected. This indicates that while a significant portion of our code is effectively parallelized, there are still sequential components and parallel inefficiencies limiting our overall speedup.
+
+
+For 1 threads, Peak Performance =   440.28 MegaMults/Sec
+For 4 threads, Peak Performance =  1072.39 MegaMults/Sec
