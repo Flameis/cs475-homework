@@ -1,2 +1,0 @@
-For 1 threads, Peak Performance =   436.66 MegaMults/Sec
-For 4 threads, Peak Performance =  1072.39 MegaMults/Sec
