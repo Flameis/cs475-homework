@@ -48,10 +48,58 @@ const float GRAVITY =	-9.8;	// acceleraion due to gravity in meters / sec^2
 const float TOL = 5.0;		// tolerance in cannonball hitting the castle in meters
 				// castle is destroyed if cannonball lands between d-TOL and d+TOL
 
-// function prototypes:
+/* // function prototypes:
 float		Ranf( float, float );
 int		Ranf( int, int );
-void		TimeOfDaySeed( );
+void		TimeOfDaySeed( ); */
+
+#include <stdlib.h>
+
+float
+Ranf( float low, float high )
+{
+        float r = (float) rand();               // 0 - RAND_MAX
+        float t = r  /  (float) RAND_MAX;       // 0. - 1.
+
+        return   low  +  t * ( high - low );
+}
+
+int
+Ranf( int ilow, int ihigh )
+{
+        float low = (float)ilow;
+        float high = ceil( (float)ihigh );
+
+        return (int) Ranf(low,high);
+}
+
+// call this if you want to force your program to use
+// a different random number sequence every time you run it:
+void
+TimeOfDaySeed( )
+{
+	time_t now;
+	time( &now );
+
+	struct tm n;
+	struct tm jan01;
+#ifdef WIN32
+	localtime_s( &n, &now );
+	localtime_s( &jan01, &now );
+#else
+	n =     *localtime(&now);
+	jan01 = *localtime(&now);
+#endif
+	jan01.tm_mon  = 0;
+	jan01.tm_mday = 1;
+	jan01.tm_hour = 0;
+	jan01.tm_min  = 0;
+	jan01.tm_sec  = 0;
+
+	double seconds = difftime( now, mktime(&jan01) );
+	unsigned int seed = (unsigned int)( 1000.*seconds );    // milliseconds
+	srand( seed );
+}
 
 // degrees-to-radians:
 inline
@@ -201,62 +249,3 @@ main( int argc, char *argv[ ] )
 
 	return 0;
 }
-
-/* For your own information, print out: (1) the number of threads, (2) the number of trials, (3) the probability of destroying the castle, and (4) the MegaTrialsPerSecond.
-
-For creating a ready-to-use CSV file, print out: (1) the number of threads, (2) the number of trials, and (3) the MegaTrialsPerSecond.
-Printing this as a single line with commas between the numbers lets you import these lines right into Excel.
-
-Helper Functions:
-
-To choose a random number between two floats or two ints, use:
-
-
-#include <stdlib.h>
-
-float
-Ranf( float low, float high )
-{
-        float r = (float) rand();               // 0 - RAND_MAX
-        float t = r  /  (float) RAND_MAX;       // 0. - 1.
-
-        return   low  +  t * ( high - low );
-}
-
-int
-Ranf( int ilow, int ihigh )
-{
-        float low = (float)ilow;
-        float high = ceil( (float)ihigh );
-
-        return (int) Ranf(low,high);
-}
-
-// call this if you want to force your program to use
-// a different random number sequence every time you run it:
-void
-TimeOfDaySeed( )
-{
-	time_t now;
-	time( &now );
-
-	struct tm n;
-	struct tm jan01;
-#ifdef WIN32
-	localtime_s( &n, &now );
-	localtime_s( &jan01, &now );
-#else
-	n =     *localtime(&now);
-	jan01 = *localtime(&now);
-#endif
-	jan01.tm_mon  = 0;
-	jan01.tm_mday = 1;
-	jan01.tm_hour = 0;
-	jan01.tm_min  = 0;
-	jan01.tm_sec  = 0;
-
-	double seconds = difftime( now, mktime(&jan01) );
-	unsigned int seed = (unsigned int)( 1000.*seconds );    // milliseconds
-	srand( seed );
-}
- */
