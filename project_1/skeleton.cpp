@@ -123,7 +123,7 @@ main( int argc, char *argv[ ] )
         int trialCounts[numTrialOptions] = {50000, 100000, 500000};
 
         // Number of times to run each combination
-        const int numRunsPerCombo = 2;
+        const int numRunsPerCombo = 1;
 
         // Open CSV file for writing results in working directory
         std::ofstream csvFile("results.csv");
