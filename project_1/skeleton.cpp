@@ -178,7 +178,7 @@ main( int argc, char *argv[ ] )
 
                                         numHits = 0;  // Reset numHits for each timing try
 
-                                        #pragma omp parallel for default(none) shared(vs, ths, gs, hs, ds, numHits, NUMTRIALS_VALUE)
+                                        #pragma omp parallel for default(none) shared(vs, ths, gs, hs, ds, numHits, NUMTRIALS_VALUE, stderr, GRAVITY, DEBUG, TOL)
                                         for (int i = 0; i < NUMTRIALS_VALUE; i++)
                                         {
                                                 // randomize everything:
