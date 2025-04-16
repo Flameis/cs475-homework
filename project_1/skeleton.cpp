@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -150,7 +149,7 @@ main( int argc, char *argv[ ] )
 
 		numHits = 0;
 
-		#pragma omp parallel for reduction(+:numHits) schedule(static, 1)
+		#pragma omp parallel for
 		for( int n = 0; n < NUMTRIALS; n++ )
 		{
 			// randomize everything:
@@ -173,7 +172,7 @@ main( int argc, char *argv[ ] )
 			{
 				// see if the ball hits the vertical cliff face:
 				t = g / vx;	// time to reach the cliff face
-				float y = vy * t + 0.5f*GRAVITY*pow(2, t);	// vertical distance to the cliff face
+				float y = vy * t + 0.5f*GRAVITY*t*t;	// vertical distance to the cliff face
 				if( y <= h )
 				{
 					if( DEBUG )	fprintf( stderr, "Ball hits the cliff face\n" );
