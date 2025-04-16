@@ -4,49 +4,53 @@
 #include <stdlib.h>
 #include <time.h>
 #include <omp.h>
-#include <fstream> // Add this for file I/O
 
 #ifndef F_PI
-#define F_PI            (float)M_PI
+#define F_PI		(float)M_PI
 #endif
 
 // print debugging messages?
 #ifndef DEBUG
-#define DEBUG           false
+#define DEBUG		false
 #endif
 
 // setting the number of threads to use:
 // (this a default value -- it can also be set from the outside by your script)
 #ifndef NUMT
-#define NUMT                2
+#define NUMT		    2
 #endif
 
 // setting the number of trials in the monte carlo simulation:
 // (this a default value -- it can also be set from the outside by your script)
 #ifndef NUMTRIALS
-#define NUMTRIALS       50000
+#define NUMTRIALS	50000
 #endif
 
 // how many tries to discover the maximum performance:
 #ifndef NUMTRIES
-#define NUMTRIES        30
+#define NUMTRIES	30
 #endif
 
 // ranges for the random numbers:
-const float GMIN =      10.0;   // ground distance in meters
-const float GMAX =      20.0;   // ground distance in meters
-const float HMIN =      20.0;   // cliff height in meters
-const float HMAX =      30.0;   // cliff height in meters
-const float DMIN  =     10.0;   // distance to castle in meters
-const float DMAX  =     20.0;   // distance to castle in meters
-const float VMIN  =     20.0;   // intial cnnonball velocity in meters / sec
-const float VMAX  =     30.0;   // intial cnnonball velocity in meters / sec
-const float THMIN =     70.0;   // cannonball launch angle in degrees
-const float THMAX =     80.0;   // cannonball launch angle in degrees
+const float GMIN =	10.0;	// ground distance in meters
+const float GMAX =	20.0;	// ground distance in meters
+const float HMIN =	20.0;	// cliff height in meters
+const float HMAX =	30.0;	// cliff height in meters
+const float DMIN  =	10.0;	// distance to castle in meters
+const float DMAX  =	20.0;	// distance to castle in meters
+const float VMIN  =	20.0;	// intial cnnonball velocity in meters / sec
+const float VMAX  =	30.0;	// intial cnnonball velocity in meters / sec
+const float THMIN = 	70.0;	// cannonball launch angle in degrees
+const float THMAX =	80.0;	// cannonball launch angle in degrees
 
-const float GRAVITY =   -9.8;   // acceleraion due to gravity in meters / sec^2
-const float TOL = 5.0;          // tolerance in cannonball hitting the castle in meters
-                                // castle is destroyed if cannonball lands between d-TOL and d+TOL
+const float GRAVITY =	-9.8;	// acceleraion due to gravity in meters / sec^2
+const float TOL = 5.0;		// tolerance in cannonball hitting the castle in meters
+				// castle is destroyed if cannonball lands between d-TOL and d+TOL
+
+/* // function prototypes:
+float		Ranf( float, float );
+int		Ranf( int, int );
+void		TimeOfDaySeed( ); */
 
 #include <stdlib.h>
 
@@ -73,34 +77,34 @@ Ranf( int ilow, int ihigh )
 void
 TimeOfDaySeed( )
 {
-        time_t now;
-        time( &now );
+	time_t now;
+	time( &now );
 
-        struct tm n;
-        struct tm jan01;
+	struct tm n;
+	struct tm jan01;
 #ifdef WIN32
-        localtime_s( &n, &now );
-        localtime_s( &jan01, &now );
+	localtime_s( &n, &now );
+	localtime_s( &jan01, &now );
 #else
-        n =     *localtime(&now);
-        jan01 = *localtime(&now);
+	n =     *localtime(&now);
+	jan01 = *localtime(&now);
 #endif
-        jan01.tm_mon  = 0;
-        jan01.tm_mday = 1;
-        jan01.tm_hour = 0;
-        jan01.tm_min  = 0;
-        jan01.tm_sec  = 0;
+	jan01.tm_mon  = 0;
+	jan01.tm_mday = 1;
+	jan01.tm_hour = 0;
+	jan01.tm_min  = 0;
+	jan01.tm_sec  = 0;
 
-        double seconds = difftime( now, mktime(&jan01) );
-        unsigned int seed = (unsigned int)( 1000.*seconds );    // milliseconds
-        srand( seed );
+	double seconds = difftime( now, mktime(&jan01) );
+	unsigned int seed = (unsigned int)( 1000.*seconds );    // milliseconds
+	srand( seed );
 }
 
 // degrees-to-radians:
 inline
 float Radians( float degrees )
 {
-        return (F_PI/180.f) * degrees;
+	return (F_PI/180.f) * degrees;
 }
 
 
@@ -109,179 +113,138 @@ int
 main( int argc, char *argv[ ] )
 {
 #ifndef _OPENMP
-        fprintf( stderr, "No OpenMP support!\n" );
-        return 1;
+	fprintf( stderr, "No OpenMP support!\n" );
+	return 1;
 #endif
 
-        TimeOfDaySeed( );               // seed the random number generator
+	TimeOfDaySeed( );		// seed the random number generator
 
-        // Define arrays of thread counts and trial counts to test
-        const int numThreadsOptions = 4;
-        int threadCounts[numThreadsOptions] = {1, 2, 4, 8};
+	omp_set_num_threads( NUMT );	// set the number of threads to use in parallelizing the for-loop:`
+	
+	// better to define these here so that the rand() calls don't get into the thread timing:
+	float *vs  = new float [NUMTRIALS];
+	float *ths = new float [NUMTRIALS];
+	float * gs = new float [NUMTRIALS];
+	float * hs = new float [NUMTRIALS];
+	float * ds = new float [NUMTRIALS];
 
-        const int numTrialOptions = 3;
-        int trialCounts[numTrialOptions] = {50000, 100000, 500000};
+	// fill the random-value arrays:
+	for( int n = 0; n < NUMTRIALS; n++ )
+	{
+		vs[n]  = Ranf(  VMIN,  VMAX );
+		ths[n] = Ranf( THMIN, THMAX );
+ 		gs[n]  = Ranf(  GMIN,  GMAX );
+ 		hs[n]  = Ranf(  HMIN,  HMAX );
+ 		ds[n]  = Ranf(  DMIN,  DMAX );
+	}
 
-        // Number of times to run each combination
-        const int numRunsPerCombo = 2;
+	// get ready to record the maximum performance and the probability:
+	double maxPerformance = 0.;	// must be declared outside the NUMTRIES loop
+	int numHits;			// must be declared outside the NUMTRIES loop
 
-        // Open CSV file for writing results in working directory
-        std::ofstream csvFile("results.csv");
+	// looking for the maximum performance:
+	for( int tries = 0; tries < NUMTRIES; tries++ )
+	{
+		double time0 = omp_get_wtime( );
 
-        // Write CSV header
-        if (csvFile.is_open()) {
-                csvFile << "Run,Threads,Trials,MegaTrialsPerSecond,Probability\n";
-        } else {
-                fprintf(stderr, "Error: Could not open CSV file for writing\n");
-                return 1;
-        }
+		numHits = 0;
 
-        // Loop through thread and trial combinations
-        for (int t = 0; t < numThreadsOptions; t++) {
-                int NUMT_VALUE = threadCounts[t];
+		#pragma omp parallel for
+		for( int n = 0; n < NUMTRIALS; n++ )
+		{
+			// randomize everything:
+			float v   = vs[n];
+			float thr = Radians( ths[n] );
+			float vx  = v * cos(thr);
+			float vy  = v * sin(thr);
+			float  g  =  gs[n];
+			float  h  =  hs[n];
+			float  d  =  ds[n];
 
-                for (int n = 0; n < numTrialOptions; n++) {
-                        int NUMTRIALS_VALUE = trialCounts[n];
+			// see if the ball doesn't even reach the cliff:`
+			float t = g / vy;	// time to reach the ground
+			float x = vx * t;	// horizontal distance to the cliff
+			if( x <= g )
+			{
+				if( DEBUG )	fprintf( stderr, "Ball doesn't even reach the cliff\n" );
+			}
+			else
+			{
+				// see if the ball hits the vertical cliff face:
+				t = g / vx;	// time to reach the cliff face
+				float y = vy * t + 0.5f*GRAVITY*t*t;	// vertical distance to the cliff face
+				if( y <= h )
+				{
+					if( DEBUG )	fprintf( stderr, "Ball hits the cliff face\n" );
+				}
+				else
+				{
+					// the ball hits the upper deck:
+					// the time solution for this is a quadratic equation of the form:
+					// At^2 + Bt + C = 0.
+					// where 'A' multiplies time^2
+					//       'B' multiplies time
+					//       'C' is a constant
+					float A = 0.5f*GRAVITY; 
+					float B = vy;	// initial vertical velocity
+					float C = h - g;	// height of the upper deck
+					float disc = B*B - 4.f*A*C;	// quadratic formula discriminant
 
-                        // Run each combination multiple times
-                        for (int run = 1; run <= numRunsPerCombo; run++) {
-                                fprintf(stderr, "Running with %d threads and %d trials (Run %d of %d)...\n",
-                                        NUMT_VALUE, NUMTRIALS_VALUE, run, numRunsPerCombo);
+					// ball doesn't go as high as the upper deck:
+					// this should "never happen" ... :-)
+					if( disc < 0. )
+					{
+						if( DEBUG )	fprintf( stderr, "Ball doesn't reach the upper deck.\n" );
+						exit( 1 );	// something is wrong...
+					}
 
-                                omp_set_num_threads(NUMT_VALUE);        // set the number of threads
+					// successfully hits the ground above the cliff:
+					// get the intersection:
+					float sqrtdisc = sqrtf( disc );
+					float t1 = (-B + sqrtdisc ) / ( 2.f*A );	// time to intersect high ground
+					float t2 = (-B - sqrtdisc ) / ( 2.f*A );	// time to intersect high ground
 
-                                // better to define these here so that the rand() calls don't get into the thread timing:
-                                float *vs  = new float [NUMTRIALS_VALUE];
-                                float *ths = new float [NUMTRIALS_VALUE];
-                                float *gs = new float [NUMTRIALS_VALUE];
-                                float *hs = new float [NUMTRIALS_VALUE];
-                                float *ds = new float [NUMTRIALS_VALUE];
+					// only care about the second intersection
+					float tmax = t1;
+					if( t2 > t1 )
+						tmax = t2;
 
-                                // fill the random-value arrays:
-                                for (int i = 0; i < NUMTRIALS_VALUE; i++)
-                                {
-                                        vs[i]  = Ranf(VMIN, VMAX);
-                                        ths[i] = Ranf(THMIN, THMAX);
-                                        gs[i]  = Ranf(GMIN, GMAX);
-                                        hs[i]  = Ranf(HMIN, HMAX);
-                                        ds[i]  = Ranf(DMIN, DMAX);
-                                }
+					// how far does the ball land horizontlly from the edge of the cliff?
+					float upperDist = vx * tmax  -  g;
 
-                                // get ready to record the maximum performance and the probability:
-                                double maxPerformance = 0.;
-                                int numHits;
+					// see if the ball hits the castle:
+					if(  fabs( upperDist - d ) <= TOL )
+					{
+						if( DEBUG )  fprintf( stderr, "Hits the castle at upperDist = %8.3f\n", upperDist );
+					
+						// increment the number of hits:
+						#pragma omp atomic
+						numHits++;
+					}
+					else
+					{
+						if( DEBUG )  fprintf( stderr, "Misses the castle at upperDist = %8.3f\n", upperDist );
+					}
+				} // if ball clears the cliff face
+			} // if ball gets as far as the cliff face
+		} // for( # of  monte carlo trials )
 
-                                // looking for the maximum performance:
-                                for (int tries = 0; tries < NUMTRIES; tries++)
-                                {
-                                        double time0 = omp_get_wtime();
+		double time1 = omp_get_wtime( );
+		double megaTrialsPerSecond = (double)NUMTRIALS / ( time1 - time0 ) / 1000000.;
+		if( megaTrialsPerSecond > maxPerformance )
+			maxPerformance = megaTrialsPerSecond;
+	} // for ( # of timing tries )
 
-                                        numHits = 0;
+	float probability = (float)numHits/(float)( NUMTRIALS );	// just get for the last run
 
-                                        #pragma omp parallel for
-                                        for (int i = 0; i < NUMTRIALS_VALUE; i++)
-                                        {
-                                                // randomize everything:
-                                                float v   = vs[i];
-                                                float thr = Radians(ths[i]);
-                                                float vx  = v * cos(thr);
-                                                float vy  = v * sin(thr);
-                                                float g   = gs[i];
-                                                float h   = hs[i];
-                                                float d   = ds[i];
+// uncomment this if you want to print output to a ready-to-use CSV file:
+#define CSV
+#ifdef CSV
+	fprintf(stderr, "%2d , %8d , %6.2lf , %6.2f\n",  NUMT, NUMTRIALS, maxPerformance, 100.*probability);
+#else
+	fprintf(stderr, "%2d threads : %8d trials ; probability = %6.2f%% ; megatrials/sec = %6.2lf\n",
+		NUMT, NUMTRIALS, 100.*probability, maxPerformance);
+#endif
 
-                                                // see if the ball doesn't even reach the cliff:
-                                                float t = g / vy;       // time to reach the ground
-                                                float x = vx * t;       // horizontal distance to the cliff
-                                                if (x <= g)
-                                                {
-                                                        if (DEBUG) fprintf(stderr, "Ball doesn't even reach the cliff\n");
-                                                }
-                                                else
-                                                {
-                                                        // see if the ball hits the vertical cliff face:
-                                                        t = g / vx;     // time to reach the cliff face
-                                                        float y = vy * t + 0.5f*GRAVITY*t*t;    // vertical distance to the cliff face
-                                                        if (y <= h)
-                                                        {
-                                                                if (DEBUG) fprintf(stderr, "Ball hits the cliff face\n");
-                                                        }
-                                                        else
-                                                        {
-                                                                // the ball hits the upper deck:
-                                                                // the time solution for this is a quadratic equation of the form:
-                                                                // At^2 + Bt + C = 0.
-                                                                float A = 0.5f*GRAVITY;
-                                                                float B = vy;   // initial vertical velocity
-                                                                float C = h - g;        // height of the upper deck
-                                                                float disc = B*B - 4.f*A*C;     // quadratic formula discriminant
-
-                                                                // ball doesn't go as high as the upper deck:
-                                                                if (disc < 0.)
-                                                                {
-                                                                        if (DEBUG) fprintf(stderr, "Ball doesn't reach the upper deck.\n");
-                                                                        exit(1);        // something is wrong...
-                                                                }
-
-                                                                // successfully hits the ground above the cliff:
-                                                                float sqrtdisc = sqrtf(disc);
-                                                                float t1 = (-B + sqrtdisc) / (2.f*A);
-                                                                float t2 = (-B - sqrtdisc) / (2.f*A);
-
-                                                                // only care about the second intersection
-                                                                float tmax = t1;
-                                                                if (t2 > t1)
-                                                                        tmax = t2;
-
-                                                                // how far does the ball land horizontlly from the edge of the cliff?
-                                                                float upperDist = vx * tmax - g;
-
-                                                                // see if the ball hits the castle:
-                                                                if (fabs(upperDist - d) <= TOL)
-                                                                {
-                                                                        if (DEBUG) fprintf(stderr, "Hits the castle at upperDist = %8.3f\n", upperDist);
-
-                                                                        // increment the number of hits:
-                                                                        #pragma omp atomic
-                                                                        numHits++;
-                                                                }
-                                                                else
-                                                                {
-                                                                        if (DEBUG) fprintf(stderr, "Misses the castle at upperDist = %8.3f\n", upperDist);
-                                                                }
-                                                        } // if ball clears the cliff face
-                                                } // if ball gets as far as the cliff face
-                                        } // for each trial
-
-                                        double time1 = omp_get_wtime();
-                                        double megaTrialsPerSecond = (double)NUMTRIALS_VALUE / (time1 - time0) / 1000000.;
-                                        if (megaTrialsPerSecond > maxPerformance)
-                                                maxPerformance = megaTrialsPerSecond;
-                                } // for each timing try
-
-                                float probability = (float)numHits / (float)(NUMTRIALS_VALUE);
-
-                                // Write to CSV file with run number
-                                csvFile << run << "," << NUMT_VALUE << "," << NUMTRIALS_VALUE << ","
-                                        << maxPerformance << "," << (100.0*probability) << "\n";
-
-                                // Also print to console
-                                fprintf(stderr, "Run %d: %2d threads : %8d trials ; probability = %6.2f%% ; megatrials/sec = %6.2lf\n",
-                                        run, NUMT_VALUE, NUMTRIALS_VALUE, 100.*probability, maxPerformance);
-
-                                // Clean up memory
-                                delete[] vs;
-                                delete[] ths;
-                                delete[] gs;
-                                delete[] hs;
-                                delete[] ds;
-                        } // for each run
-                } // for each trial count
-        } // for each thread count
-
-        // Close the CSV file
-        csvFile.close();
-        fprintf(stderr, "All tests completed. Results saved to results.csv in the working directory\n");
-
-        return 0;
+	return 0;
 }
