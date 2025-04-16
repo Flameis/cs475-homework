@@ -125,8 +125,8 @@ main( int argc, char *argv[ ] )
         // Number of times to run each combination
         const int numRunsPerCombo = 2;
 
-        // Open CSV file for writing results
-        std::ofstream csvFile("d:\\Homework\\CS\\CS475\\project_1\\results.csv");
+        // Open CSV file for writing results in working directory
+        std::ofstream csvFile("results.csv");
 
         // Write CSV header
         if (csvFile.is_open()) {
@@ -169,16 +169,16 @@ main( int argc, char *argv[ ] )
 
                                 // get ready to record the maximum performance and the probability:
                                 double maxPerformance = 0.;
-                                int numHits = 0;  // Initialize to zero for each try
+                                int numHits;
 
                                 // looking for the maximum performance:
                                 for (int tries = 0; tries < NUMTRIES; tries++)
                                 {
                                         double time0 = omp_get_wtime();
 
-                                        numHits = 0;  // Reset numHits for each timing try
+                                        numHits = 0;
 
-                                        #pragma omp parallel for default(none) shared(vs, ths, gs, hs, ds, numHits, NUMTRIALS_VALUE, stderr, GRAVITY, DEBUG, TOL)
+                                        #pragma omp parallel for
                                         for (int i = 0; i < NUMTRIALS_VALUE; i++)
                                         {
                                                 // randomize everything:
@@ -220,7 +220,7 @@ main( int argc, char *argv[ ] )
                                                                 if (disc < 0.)
                                                                 {
                                                                         if (DEBUG) fprintf(stderr, "Ball doesn't reach the upper deck.\n");
-                                                                        continue;  // Skip this trial instead of exiting
+                                                                        exit(1);        // something is wrong...
                                                                 }
 
                                                                 // successfully hits the ground above the cliff:
