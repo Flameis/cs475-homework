@@ -11,7 +11,7 @@
 
 // print debugging messages?
 #ifndef DEBUG
-#define DEBUG		false
+#define DEBUG		true
 #endif
 
 // setting the number of threads to use:
