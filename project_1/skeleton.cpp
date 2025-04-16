@@ -161,9 +161,11 @@ main( int argc, char *argv[ ] )
 			float  h  =  hs[n];
 			float  d  =  ds[n];
 
-			// see if the ball doesn't even reach the cliff:`
-			float t = g / vy;	// time to reach the ground
-			float x = vx * t;	// horizontal distance to the cliff
+			// see if the ball doesn't even reach the cliff:
+			// solving y = 0 = vy*t + 0.5*GRAVITY*t^2
+			// t = -vy / (0.5*GRAVITY) - time to return to ground level
+			float t = -vy / (0.5f*GRAVITY);  // will be positive since vy > 0 and GRAVITY < 0
+			float x = vx * t;	// horizontal distance traveled
 			if( x <= g )
 			{
 				if( DEBUG )	fprintf( stderr, "Ball doesn't even reach the cliff\n" );
