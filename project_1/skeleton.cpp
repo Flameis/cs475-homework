@@ -116,8 +116,8 @@ main( int argc, char *argv[ ] )
         TimeOfDaySeed( );               // seed the random number generator
 
         // Define arrays of thread counts and trial counts to test
-        const int numThreadsOptions = 4;
-        int threadCounts[numThreadsOptions] = {1, 2, 4, 8};
+        const int numThreadsOptions = 5;
+        int threadCounts[numThreadsOptions] = {1, 2, 4, 6, 8};
 
         const int numTrialOptions = 3;
         int trialCounts[numTrialOptions] = {50000, 100000, 500000};
