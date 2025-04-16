@@ -169,16 +169,16 @@ main( int argc, char *argv[ ] )
 
                                 // get ready to record the maximum performance and the probability:
                                 double maxPerformance = 0.;
-                                int numHits;
+                                int numHits = 0;  // Initialize to zero for each try
 
                                 // looking for the maximum performance:
                                 for (int tries = 0; tries < NUMTRIES; tries++)
                                 {
                                         double time0 = omp_get_wtime();
 
-                                        numHits = 0;
+                                        numHits = 0;  // Reset numHits for each timing try
 
-                                        #pragma omp parallel for
+                                        #pragma omp parallel for default(none) shared(vs, ths, gs, hs, ds, numHits, NUMTRIALS_VALUE)
                                         for (int i = 0; i < NUMTRIALS_VALUE; i++)
                                         {
                                                 // randomize everything:
@@ -220,7 +220,7 @@ main( int argc, char *argv[ ] )
                                                                 if (disc < 0.)
                                                                 {
                                                                         if (DEBUG) fprintf(stderr, "Ball doesn't reach the upper deck.\n");
-                                                                        exit(1);        // something is wrong...
+                                                                        continue;  // Skip this trial instead of exiting
                                                                 }
 
                                                                 // successfully hits the ground above the cliff:
