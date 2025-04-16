@@ -240,7 +240,7 @@ main( int argc, char *argv[ ] )
 // uncomment this if you want to print output to a ready-to-use CSV file:
 #define CSV
 #ifdef CSV
-	fprintf(stderr, "%2d , %8d , %6.2lf , %6.2f\n",  NUMT, NUMTRIALS, maxPerformance, 100.*probability);
+	fprintf(stderr, "%2d , %8d , %6.2lf\n",  NUMT, NUMTRIALS, maxPerformance);
 #else
 	fprintf(stderr, "%2d threads : %8d trials ; probability = %6.2f%% ; megatrials/sec = %6.2lf\n",
 		NUMT, NUMTRIALS, 100.*probability, maxPerformance);
