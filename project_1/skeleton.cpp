@@ -17,13 +17,13 @@
 // setting the number of threads to use:
 // (this a default value -- it can also be set from the outside by your script)
 #ifndef NUMT
-#define NUMT		    2
+#define NUMT		    8
 #endif
 
 // setting the number of trials in the monte carlo simulation:
 // (this a default value -- it can also be set from the outside by your script)
 #ifndef NUMTRIALS
-#define NUMTRIALS	50000
+#define NUMTRIALS	500000
 #endif
 
 // how many tries to discover the maximum performance:
