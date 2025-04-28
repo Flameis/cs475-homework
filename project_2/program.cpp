@@ -7,8 +7,8 @@
 
 unsigned int seed = 0;
 
-const float GRAIN_GROWS_PER_MONTH =	       12.0;
-const float ONE_DEER_EATS_PER_MONTH =		4.0;
+const float GRAIN_GROWS_PER_MONTH =	       10.0;
+const float ONE_DEER_EATS_PER_MONTH =		2.0;
 const float ONE_PREDATOR_EATS_PER_MONTH =		2.0;	// predator eats 2 deer per month
 
 const float AVG_PRECIP_PER_MONTH =		7.0;	// average
@@ -224,9 +224,9 @@ void Predator( )
 
         nextNumPredator = NowNumPredator;
 
-        if(deerPerPredator >= 5.0)  // Good conditions for predator growth
+        if(deerPerPredator >= 4.0)  // Good conditions for predator growth
             nextNumPredator += Ranf(0, 1); 
-        else if(deerPerPredator >= 3.0)  // Stable conditions
+        else if(deerPerPredator >= 2.0)  // Stable conditions
             nextNumPredator += Ranf(-1, 1);
         else  // Scarce food conditions
             nextNumPredator += Ranf(-2, 0);
@@ -297,7 +297,7 @@ int main( int argc, char *argv[ ] )
     // starting state (feel free to change this if you want):
     NowNumDeer = 6;
     NowHeight =  10.;
-    NowNumPredator = 1;
+    NowNumPredator = 2;
 
     omp_set_num_threads( 4 );	// same as # of sections
     InitBarrier( 4 );
