@@ -168,7 +168,7 @@ void Deer()
         if(NowNumPredator > 0)
             nextNumDeer -= (int)(NowNumPredator * ONE_PREDATOR_EATS_PER_MONTH);
             
-        if(NowNumDeer < 0)
+        if(nextNumDeer < 0)
             nextNumDeer = 0;
             
         // Done computing - wait for all threads
@@ -294,9 +294,9 @@ int main( int argc, char *argv[ ] )
     NowYear  = 2025;
 
     // starting state (feel free to change this if you want):
-    NowNumDeer = 6;
-    NowHeight =  10.;
-    NowNumPredator = 2;
+    NowNumDeer =  50;
+    NowHeight =  1000.;
+    NowNumPredator = 6;
 
     omp_set_num_threads( 4 );	// same as # of sections
     InitBarrier( 4 );
