@@ -111,8 +111,8 @@ TimeOfDaySeed( )
 	jan01.tm_sec  = 0;
 
 	double seconds = difftime( now, mktime(&jan01) );
-	unsigned int seed = (unsigned int)( 1000.*seconds );    // milliseconds
-	srand( seed );
+	unsigned int rseed = (unsigned int)( 1000.*seconds );    // milliseconds
+	srand( rseed );
 }
 
 // main program:
@@ -123,6 +123,24 @@ main( int argc, char *argv[ ] )
 	fprintf( stderr, "No OpenMP support!\n" );
 	return 1;
 #endif
+
+    float ang = (  30.*(float)NowMonth + 15.  ) * ( M_PI / 180. );	// angle of earth around the sun
+
+    float temp = AVG_TEMP - AMP_TEMP * cos( ang );
+    NowTemp = temp + Ranf( -RANDOM_TEMP, RANDOM_TEMP );
+
+    float precip = AVG_PRECIP_PER_MONTH + AMP_PRECIP_PER_MONTH * sin( ang );
+    NowPrecip = precip + Ranf( -RANDOM_PRECIP, RANDOM_PRECIP );
+    if( NowPrecip < 0. )
+        NowPrecip = 0.;
+
+    // starting date and time:
+    NowMonth =    0;
+    NowYear  = 2025;
+
+    // starting state (feel free to change this if you want):
+    NowNumDeer = 2;
+    NowHeight =  5.;
 
     omp_set_num_threads( 4 );	// same as # of sections
     InitBarrier( 4 );
@@ -149,25 +167,6 @@ main( int argc, char *argv[ ] )
     	}
     }       // implied barrier -- all functions must return in order
     	// to allow any of them to get past here
-
-    float ang = (  30.*(float)NowMonth + 15.  ) * ( M_PI / 180. );	// angle of earth around the sun
-
-    float temp = AVG_TEMP - AMP_TEMP * cos( ang );
-    NowTemp = temp + Ranf( -RANDOM_TEMP, RANDOM_TEMP );
-    
-    float precip = AVG_PRECIP_PER_MONTH + AMP_PRECIP_PER_MONTH * sin( ang );
-    NowPrecip = precip + Ranf( -RANDOM_PRECIP, RANDOM_PRECIP );
-    if( NowPrecip < 0. )
-        NowPrecip = 0.;
-
-    // starting date and time:
-    NowMonth =    0;
-    NowYear  = 2025;
-
-    // starting state (feel free to change this if you want):
-    NowNumDeer = 2;
-    NowHeight =  5.;
-
 }
 
 void
@@ -217,6 +216,12 @@ Watcher( )
         WaitBarrier( );
         printf( "Year: %d Month: %d Temp: %f Precip: %f Height: %f Deer: %d\n",
                 NowYear, NowMonth, NowTemp, NowPrecip, NowHeight, NowNumDeer );
+        NowMonth++;
+        if( NowMonth == 12 )
+        {
+            NowMonth = 0;
+            NowYear++;
+        }
         WaitBarrier( );
     }
 }
