@@ -224,7 +224,7 @@ void Predator( )
         float deerPerPredator = NowNumDeer / (float)(NowNumPredator > 0 ? NowNumPredator : 1);
 
         if(deerPerPredator >= 4.0)  // Good conditions for predator growth
-            nextNumPredator += Ranf(0, 1); 
+            nextNumPredator += Ranf(0, 2); 
         else if(deerPerPredator >= 2.0)  // Stable conditions
             nextNumPredator += Ranf(-1, 1);
         else  // Scarce food conditions
