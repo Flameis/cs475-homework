@@ -8,7 +8,7 @@
 unsigned int seed = 0;
 
 const float GRAIN_GROWS_PER_MONTH =	       20.0;
-const float ONE_DEER_EATS_PER_MONTH =		2.0;
+const float ONE_DEER_EATS_PER_MONTH =		8.0;
 const float ONE_PREDATOR_EATS_PER_MONTH =		1.0;	// predator eats 2 deer per month
 
 const float AVG_PRECIP_PER_MONTH =		7.0;	// average
