@@ -269,8 +269,8 @@ void Watcher( )
         if( NowPrecip < 0. )
             NowPrecip = 0.;
 
-        #define CSV_OUTPUT 1
-        #ifndef CSV_OUTPUT
+        #define CSV_OUTPUT
+        #ifdef CSV_OUTPUT
         printf( "%d,%d,%f,%f,%f,%d,%d\n",
                 NowYear, NowMonth, NowTemp, NowPrecip, NowHeight, NowNumDeer, NowNumPredator );
         #else
