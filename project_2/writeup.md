@@ -1,4 +1,8 @@
-# Project 2 - Functional Decomposition and Barrier Synchronization
+# CS 475 - Project 2: Functional Decomposition
+**Name:** Luke Scovel  
+**Email:** scovell@oregonstate.edu  
+**Project Number:** 2  
+**Project Name:** Functional Decomposition
 
 ## Own-Choice Quantity: Predator Population
 
@@ -14,7 +18,10 @@ The predator population fits into the simulation by creating a balancer for the 
 
 ## Simulation Data
 
+![Results](image.png)
 
-## Simulation Graph
+## Commentary on Results
 
-## Analysis of Patterns
+The simulation shows that the deer population would decimate the grain population if the deer population was not kept in check. Whenever the deer population was low, the height of the grain population increased rapidly which allowed for more deer to survive. The predator population was more stable since there were fewer of them. The temperature and rainfall had more random curves to introduce noise into the simulation.
+
+Whenever the deer population increased, the predator population increased as well. This would then result in a decrease in the deer population. This showed that my quatity was affecting the simulation correctly.
