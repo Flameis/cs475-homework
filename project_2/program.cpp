@@ -118,14 +118,14 @@ void WaitBarrier(BarrierType bt)
                 NumAtBarrier = 0;
                 switch (bt)
                 {
-                    case BARRIER_COMPUTE: 
-                        CurrentBarrier = BARRIER_ASSIGN; 
+                    case B_COMPUTE: 
+                        CurrentBarrier = B_ASSIGN; 
                         break;
-                    case BARRIER_ASSIGN: 
-                        CurrentBarrier = BARRIER_PRINT; 
+                    case B_ASSIGN: 
+                        CurrentBarrier = B_PRINT; 
                         break;
-                    case BARRIER_PRINT: 
-                        CurrentBarrier = BARRIER_COMPUTE;
+                    case B_PRINT: 
+                        CurrentBarrier = B_COMPUTE;
                         break;
                 }
                 // let all other threads get back to what they were doing
