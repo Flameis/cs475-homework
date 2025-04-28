@@ -107,8 +107,6 @@ InitBarrier( int n )
 
 
 // have the calling thread wait here until all the other threads catch up:
-
-void
 void WaitBarrier(BarrierType bt)
 {
     omp_set_lock( &Lock );
