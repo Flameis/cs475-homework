@@ -274,7 +274,7 @@ void Watcher( )
         if( NowPrecip < 0. )
             NowPrecip = 0.;
 
-        int Months = 0;
+        int Months = 1;
         Months = (NowYear - 2025) * 12 + NowMonth;
 
         #define CSV_OUTPUT
