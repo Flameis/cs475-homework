@@ -148,17 +148,16 @@ void Deer()
 {
     while( NowYear < 2030 )
     {
-        int nextNumDeer;
-        
         // Wait for compute
         if (CurrentBarrier != B_COMPUTE)
             WaitBarrier(CurrentBarrier);
+
+        int nextNumDeer;
+        nextNumDeer = NowNumDeer;  // Start from current population
         
         // Deer population growth based on available grain
         float grainPerDeer = NowHeight / (float)(NowNumDeer > 0 ? NowNumDeer : 1);
 
-        nextNumDeer = NowNumDeer;  // Start from current population
-        
         if(grainPerDeer >= 3.0)  // Good conditions for population growth
             nextNumDeer += Ranf(0, 3); 
         else if(grainPerDeer >= 1.0)  // Stable conditions
@@ -188,10 +187,11 @@ void Grain( )
 {
     while( NowYear < 2030 )
     {
-        float nextHeight;
-
         if (CurrentBarrier != B_COMPUTE)
             WaitBarrier(CurrentBarrier);
+
+        float nextHeight;
+        nextHeight = NowHeight;
 
         nextHeight += (GRAIN_GROWS_PER_MONTH * NowPrecip) - (NowNumDeer * ONE_DEER_EATS_PER_MONTH);
         if(nextHeight < 0.)
@@ -213,16 +213,15 @@ void Predator( )
 {
     while( NowYear < 2030 )
     {
-        // Compute next value in local variable
-        int nextNumPredator;
-
         if (CurrentBarrier != B_COMPUTE)
             WaitBarrier(CurrentBarrier);
 
+        // Compute next value in local variable
+        int nextNumPredator;
+        nextNumPredator = NowNumPredator;
+
         // Predator population growth based on available deer
         float deerPerPredator = NowNumDeer / (float)(NowNumPredator > 0 ? NowNumPredator : 1);
-
-        nextNumPredator = NowNumPredator;
 
         if(deerPerPredator >= 4.0)  // Good conditions for predator growth
             nextNumPredator += Ranf(0, 1); 
@@ -254,7 +253,7 @@ void Watcher( )
         if (CurrentBarrier != B_COMPUTE)
             WaitBarrier(CurrentBarrier);
             
-        // Done computing
+        // Wait for compute
         WaitBarrier(B_COMPUTE);
         
         // Wait for assignment
