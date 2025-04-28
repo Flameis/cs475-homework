@@ -193,9 +193,9 @@ void Grain( )
         if (CurrentBarrier != B_COMPUTE)
             WaitBarrier(CurrentBarrier);
 
-        NowHeight += (GRAIN_GROWS_PER_MONTH * NowPrecip) - (NowNumDeer * ONE_DEER_EATS_PER_MONTH);
-        if( NowHeight < 0. )
-            NowHeight = 0.;
+        nextHeight += (GRAIN_GROWS_PER_MONTH * NowPrecip) - (NowNumDeer * ONE_DEER_EATS_PER_MONTH);
+        if(nextHeight < 0.)
+            nextHeight = 0.;
         
         // Done computing - wait for all threads
         WaitBarrier(B_COMPUTE);
@@ -225,14 +225,14 @@ void Predator( )
         nextNumPredator = NowNumPredator;
 
         if(deerPerPredator >= 5.0)  // Good conditions for predator growth
-            NowNumPredator += Ranf(0, 1); 
+            nextNumPredator += Ranf(0, 1); 
         else if(deerPerPredator >= 3.0)  // Stable conditions
-            NowNumPredator += Ranf(-1, 1);
+            nextNumPredator += Ranf(-1, 1);
         else  // Scarce food conditions
-            NowNumPredator += Ranf(-2, 0);
+            nextNumPredator += Ranf(-2, 0);
 
-        if(NowNumPredator < 0)
-            NowNumPredator = 0;
+        if(nextNumPredator < 0)
+            nextNumPredator = 0;
 
         // Done computing - wait for all threads
         WaitBarrier(B_COMPUTE);
