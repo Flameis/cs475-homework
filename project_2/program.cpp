@@ -274,10 +274,13 @@ void Watcher( )
         if( NowPrecip < 0. )
             NowPrecip = 0.;
 
+        Months = NowYear * 12 + NowMonth;
+
         #define CSV_OUTPUT
         #ifdef CSV_OUTPUT
-        printf( "%d,%d,%f,%f,%f,%d,%d\n",
-                NowYear, NowMonth, NowTemp, NowPrecip, NowHeight, NowNumDeer, NowNumPredator );
+
+        printf( "%d,%f,%f,%f,%d,%d\n",
+                Months, NowTemp, NowPrecip, NowHeight, NowNumDeer, NowNumPredator );
         #else
         printf( "Year: %d Month: %d Temp: %f Precip: %f GrainHeight: %f Deer: %d Predators: %d\n",
             NowYear, NowMonth, NowTemp, NowPrecip, NowHeight, NowNumDeer, NowNumPredator );
