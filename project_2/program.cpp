@@ -34,7 +34,7 @@
 unsigned int seed = 0;
 
 const float GRAIN_GROWS_PER_MONTH =	       12.0;
-const float ONE_DEER_EATS_PER_MONTH =		2.0;
+const float ONE_DEER_EATS_PER_MONTH =		4.0;
 
 const float AVG_PRECIP_PER_MONTH =		7.0;	// average
 const float AMP_PRECIP_PER_MONTH =		6.0;	// plus or minus
