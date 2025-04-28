@@ -124,15 +124,7 @@ main( int argc, char *argv[ ] )
 	return 1;
 #endif
 
-    float ang = (  30.*(float)NowMonth + 15.  ) * ( M_PI / 180. );	// angle of earth around the sun
-
-    float temp = AVG_TEMP - AMP_TEMP * cos( ang );
-    NowTemp = temp + Ranf( -RANDOM_TEMP, RANDOM_TEMP );
-
-    float precip = AVG_PRECIP_PER_MONTH + AMP_PRECIP_PER_MONTH * sin( ang );
-    NowPrecip = precip + Ranf( -RANDOM_PRECIP, RANDOM_PRECIP );
-    if( NowPrecip < 0. )
-        NowPrecip = 0.;
+    
 
     // starting date and time:
     NowMonth =    0;
@@ -214,6 +206,16 @@ Watcher( )
     while( NowYear < 2030 )
     {
         WaitBarrier( );
+        float ang = (  30.*(float)NowMonth + 15.  ) * ( M_PI / 180. );	// angle of earth around the sun
+
+        float temp = AVG_TEMP - AMP_TEMP * cos( ang );
+        NowTemp = temp + Ranf( -RANDOM_TEMP, RANDOM_TEMP );
+
+        float precip = AVG_PRECIP_PER_MONTH + AMP_PRECIP_PER_MONTH * sin( ang );
+        NowPrecip = precip + Ranf( -RANDOM_PRECIP, RANDOM_PRECIP );
+        if( NowPrecip < 0. )
+            NowPrecip = 0.;
+
         printf( "Year: %d Month: %d Temp: %f Precip: %f Height: %f Deer: %d\n",
                 NowYear, NowMonth, NowTemp, NowPrecip, NowHeight, NowNumDeer );
         NowMonth++;
