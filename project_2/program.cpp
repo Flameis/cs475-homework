@@ -32,6 +32,14 @@ float	NowHeight;		// grain height in inches
 int	NowNumDeer;		// number of deer in the current population
 int NowNumPredator;	// number of predators in the current population
 
+// starting date and time:
+NowMonth =    0;
+NowYear  = 2025;
+
+// starting state (feel free to change this if you want):
+NowNumDeer =  15;
+NowHeight =  20.;
+NowNumPredator = 3;
 
 omp_lock_t	Lock;
 volatile int	NumInThreadTeam;
@@ -304,15 +312,6 @@ int main( int argc, char *argv[ ] )
 	fprintf( stderr, "No OpenMP support!\n" );
 	return 1;
 #endif
-    // starting date and time:
-    NowMonth =    0;
-    NowYear  = 2025;
-
-    // starting state (feel free to change this if you want):
-    NowNumDeer =  50;
-    NowHeight =  1000.;
-    NowNumPredator = 6;
-
     omp_set_num_threads( 4 );	// same as # of sections
     InitBarrier( 4 );
     #pragma omp parallel sections
