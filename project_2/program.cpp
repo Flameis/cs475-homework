@@ -7,12 +7,12 @@
 
 unsigned int seed = 0;
 
-const float GRAIN_GROWS_PER_MONTH =	       20.0;
-const float ONE_DEER_EATS_PER_MONTH =		8.0;
+const float GRAIN_GROWS_PER_MONTH =	       10.0;
+const float ONE_DEER_EATS_PER_MONTH =		1.0;
 const float ONE_PREDATOR_EATS_PER_MONTH =		1.0;	// predator eats 2 deer per month
 
-const float AVG_PRECIP_PER_MONTH =		7.0;	// average
-const float AMP_PRECIP_PER_MONTH =		6.0;	// plus or minus
+const float AVG_PRECIP_PER_MONTH =		3.0;	// average
+const float AMP_PRECIP_PER_MONTH =		2.0;	// plus or minus
 const float RANDOM_PRECIP =			2.0;	// plus or minus noise
 
 const float AVG_TEMP =				60.0;	// average
@@ -193,7 +193,12 @@ void Grain( )
         float nextHeight;
         nextHeight = NowHeight;
 
-        nextHeight += (GRAIN_GROWS_PER_MONTH * NowPrecip) - (NowNumDeer * ONE_DEER_EATS_PER_MONTH);
+        float tempFactor = 1.0 - (0.05 * fabs(NowTemp - MIDTEMP));
+        if(tempFactor < 0.0)
+            tempFactor = 0.0;
+
+        nextHeight += ((GRAIN_GROWS_PER_MONTH * NowPrecip) * tempFactor) - 
+        (NowNumDeer * ONE_DEER_EATS_PER_MONTH);
         if(nextHeight < 0.)
             nextHeight = 0.;
         
