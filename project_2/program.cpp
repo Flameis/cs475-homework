@@ -5,36 +5,11 @@
 #include <time.h>
 #include <omp.h>
 
-#ifndef F_PI
-#define F_PI		(float)M_PI
-#endif
-
-// print debugging messages?
-#ifndef DEBUG
-#define DEBUG		false
-#endif
-
-// setting the number of threads to use:
-// (this a default value -- it can also be set from the outside by your script)
-#ifndef NUMT
-#define NUMT		    8
-#endif
-
-// setting the number of trials in the monte carlo simulation:
-// (this a default value -- it can also be set from the outside by your script)
-#ifndef NUMTRIALS
-#define NUMTRIALS	500000
-#endif
-
-// how many tries to discover the maximum performance:
-#ifndef NUMTRIES
-#define NUMTRIES	30
-#endif
-
 unsigned int seed = 0;
 
 const float GRAIN_GROWS_PER_MONTH =	       12.0;
 const float ONE_DEER_EATS_PER_MONTH =		4.0;
+const float ONE_PREDATOR_EATS_PER_MONTH =		2.0;	// predator eats 2 deer per month
 
 const float AVG_PRECIP_PER_MONTH =		7.0;	// average
 const float AMP_PRECIP_PER_MONTH =		6.0;	// plus or minus
@@ -55,6 +30,7 @@ float	NowPrecip;		// inches of rain per month
 float	NowTemp;		// temperature this month
 float	NowHeight;		// grain height in inches
 int	NowNumDeer;		// number of deer in the current population
+int NowNumPredator;	// number of predators in the current population
 
 
 omp_lock_t	Lock;
@@ -62,12 +38,15 @@ volatile int	NumInThreadTeam;
 volatile int	NumAtBarrier;
 volatile int	NumGone;
 
+enum BarrierType { B_COMPUTE, B_ASSIGN, B_PRINT };
+BarrierType CurrentBarrier = B_COMPUTE;
+
 void	InitBarrier( int );
-void	WaitBarrier( );
+void	WaitBarrier(BarrierType);
 void    Deer();
 void    Grain();
 void    Watcher();
-void    MyAgent();
+void    Predator();
 
 float
 Ranf( float low, float high )
@@ -115,17 +94,204 @@ TimeOfDaySeed( )
 	srand( rseed );
 }
 
+// specify how many threads will be in the barrier:
+//	(also init's the Lock)
+
+void
+InitBarrier( int n )
+{
+    NumInThreadTeam = n;
+    NumAtBarrier = 0;
+	omp_init_lock( &Lock );
+}
+
+
+// have the calling thread wait here until all the other threads catch up:
+
+void
+void WaitBarrier(BarrierType bt)
+{
+    omp_set_lock( &Lock );
+    {
+            NumAtBarrier++;
+            if( NumAtBarrier == NumInThreadTeam )
+            {
+                NumGone = 0;
+                NumAtBarrier = 0;
+                switch (bt)
+                {
+                    case BARRIER_COMPUTE: 
+                        CurrentBarrier = BARRIER_ASSIGN; 
+                        break;
+                    case BARRIER_ASSIGN: 
+                        CurrentBarrier = BARRIER_PRINT; 
+                        break;
+                    case BARRIER_PRINT: 
+                        CurrentBarrier = BARRIER_COMPUTE;
+                        break;
+                }
+                // let all other threads get back to what they were doing
+		        // before this one unlocks, knowing that they might immediately
+		        // call WaitBarrier( ) again:
+                while( NumGone != NumInThreadTeam-1 );
+                omp_unset_lock( &Lock );
+                return;
+            }
+    }
+    omp_unset_lock( &Lock );
+
+    while( NumAtBarrier != 0 );	// this waits for the nth thread to arrive
+
+    #pragma omp atomic
+    NumGone++;			// this flags how many threads have returned
+}
+
+void Deer()
+{
+    while( NowYear < 2030 )
+    {
+        int nextNumDeer;
+        
+        // Wait for compute
+        if (CurrentBarrier != B_COMPUTE)
+            WaitBarrier(CurrentBarrier);
+        
+        // Deer population growth based on available grain
+        float grainPerDeer = NowHeight / (float)(NowNumDeer > 0 ? NowNumDeer : 1);
+
+        nextNumDeer = NowNumDeer;  // Start from current population
+        
+        if(grainPerDeer >= 3.0)  // Good conditions for population growth
+            NowNumDeer += Ranf(0, 3); 
+        else if(grainPerDeer >= 1.0)  // Stable conditions
+            NowNumDeer += Ranf(-1, 2);
+        else  // Scarce food conditions
+            NowNumDeer += Ranf(-2, 0);
+
+        if(NowNumPredator > 0)
+            NowNumDeer -= (int)(NowNumPredator * ONE_PREDATOR_EATS_PER_MONTH);
+            
+        if(NowNumDeer < 0)
+            NowNumDeer = 0;
+            
+        // Done computing - wait for all threads
+        WaitBarrier(B_COMPUTE);
+
+        NowNumDeer = nextNumDeer;
+        // Done assigning - wait for all threads
+        WaitBarrier(B_ASSIGN);
+        
+        // Wait for the watcher to print
+        WaitBarrier(B_PRINT);
+    }
+}
+
+void Grain( )
+{
+    while( NowYear < 2030 )
+    {
+        float nextHeight;
+
+        if (CurrentBarrier != B_COMPUTE)
+            WaitBarrier(CurrentBarrier);
+
+        NowHeight += (GRAIN_GROWS_PER_MONTH * NowPrecip) - (NowNumDeer * ONE_DEER_EATS_PER_MONTH);
+        if( NowHeight < 0. )
+            NowHeight = 0.;
+        
+        // Done computing - wait for all threads
+        WaitBarrier(B_COMPUTE);
+
+        NowHeight = nextHeight;
+        // Done assigning - wait for all threads
+        WaitBarrier(B_ASSIGN);
+        
+        // Wait for the watcher to print
+        WaitBarrier(B_PRINT);
+    }
+}
+
+void Predator( )
+{
+    while( NowYear < 2030 )
+    {
+        // Compute next value in local variable
+        int nextNumPredator;
+
+        if (CurrentBarrier != B_COMPUTE)
+            WaitBarrier(CurrentBarrier);
+
+        // Predator population growth based on available deer
+        float deerPerPredator = NowNumDeer / (float)(NowNumPredator > 0 ? NowNumPredator : 1);
+
+        nextNumPredator = NowNumPredator;
+
+        if(deerPerPredator >= 5.0)  // Good conditions for predator growth
+            NowNumPredator += Ranf(0, 1); 
+        else if(deerPerPredator >= 3.0)  // Stable conditions
+            NowNumPredator += Ranf(-1, 1);
+        else  // Scarce food conditions
+            NowNumPredator += Ranf(-2, 0);
+
+        if(NowNumPredator < 0)
+            NowNumPredator = 0;
+
+        // Done computing - wait for all threads
+        WaitBarrier(B_COMPUTE);
+
+        NowNumPredator = nextNumPredator;
+        // Done assigning - wait for all threads
+        WaitBarrier(B_ASSIGN);
+        
+        // Wait for the watcher to print
+        WaitBarrier(B_PRINT);
+    }
+}
+
+void Watcher( )
+{
+    while( NowYear < 2030 )
+    {
+        // Wait for compute
+        if (CurrentBarrier != B_COMPUTE)
+            WaitBarrier(CurrentBarrier);
+            
+        // Done computing
+        WaitBarrier(B_COMPUTE);
+        
+        // Wait for assignment
+        WaitBarrier(B_ASSIGN);
+
+        float ang = (  30.*(float)NowMonth + 15.  ) * ( M_PI / 180. );	// angle of earth around the sun
+
+        float temp = AVG_TEMP - AMP_TEMP * cos( ang );
+        NowTemp = temp + Ranf( -RANDOM_TEMP, RANDOM_TEMP );
+
+        float precip = AVG_PRECIP_PER_MONTH + AMP_PRECIP_PER_MONTH * sin( ang );
+        NowPrecip = precip + Ranf( -RANDOM_PRECIP, RANDOM_PRECIP );
+        if( NowPrecip < 0. )
+            NowPrecip = 0.;
+
+        printf( "Year: %d Month: %d Temp: %f Precip: %f Height: %f Deer: %d\n",
+                NowYear, NowMonth, NowTemp, NowPrecip, NowHeight, NowNumDeer );
+        NowMonth++;
+        if( NowMonth == 12 )
+        {
+            NowMonth = 0;
+            NowYear++;
+        }
+        // Done printing
+        WaitBarrier(B_PRINT);
+    }
+}
+
 // main program:
-int
-main( int argc, char *argv[ ] )
+int main( int argc, char *argv[ ] )
 {
 #ifndef _OPENMP
 	fprintf( stderr, "No OpenMP support!\n" );
 	return 1;
 #endif
-
-    
-
     // starting date and time:
     NowMonth =    0;
     NowYear  = 2025;
@@ -155,126 +321,8 @@ main( int argc, char *argv[ ] )
 
     	#pragma omp section
     	{
-    		MyAgent( );	// your own
+    		Predator( );	// your own
     	}
     }       // implied barrier -- all functions must return in order
     	// to allow any of them to get past here
-}
-
-void
-Deer()
-{
-    while( NowYear < 2030 )
-    {
-        WaitBarrier();
-        
-        // Deer population growth based on available grain
-        float grainPerDeer = NowHeight / (float)(NowNumDeer > 0 ? NowNumDeer : 1);
-        
-        if(grainPerDeer >= 3.0)  // Good conditions for population growth
-            NowNumDeer += Ranf(0, 3); 
-        else if(grainPerDeer >= 1.0)  // Stable conditions
-            NowNumDeer += Ranf(-1, 2);
-        else  // Scarce food conditions
-            NowNumDeer += Ranf(-2, 0);
-            
-        if(NowNumDeer < 0)
-            NowNumDeer = 0;
-            
-        // printf("Deer: %d\n", NowNumDeer);
-        WaitBarrier();
-    }
-}
-
-void
-Grain( )
-{
-    while( NowYear < 2030 )
-    {
-        WaitBarrier( );
-        NowHeight += (GRAIN_GROWS_PER_MONTH * NowPrecip) - (NowNumDeer * ONE_DEER_EATS_PER_MONTH);
-        if( NowHeight < 0. )
-            NowHeight = 0.;
-        // printf( "Grain: %f\n", NowHeight );
-        WaitBarrier( );
-    }
-}
-
-void
-Watcher( )
-{
-    while( NowYear < 2030 )
-    {
-        WaitBarrier( );
-        float ang = (  30.*(float)NowMonth + 15.  ) * ( M_PI / 180. );	// angle of earth around the sun
-
-        float temp = AVG_TEMP - AMP_TEMP * cos( ang );
-        NowTemp = temp + Ranf( -RANDOM_TEMP, RANDOM_TEMP );
-
-        float precip = AVG_PRECIP_PER_MONTH + AMP_PRECIP_PER_MONTH * sin( ang );
-        NowPrecip = precip + Ranf( -RANDOM_PRECIP, RANDOM_PRECIP );
-        if( NowPrecip < 0. )
-            NowPrecip = 0.;
-
-        printf( "Year: %d Month: %d Temp: %f Precip: %f Height: %f Deer: %d\n",
-                NowYear, NowMonth, NowTemp, NowPrecip, NowHeight, NowNumDeer );
-        NowMonth++;
-        if( NowMonth == 12 )
-        {
-            NowMonth = 0;
-            NowYear++;
-        }
-        WaitBarrier( );
-    }
-}
-
-void
-MyAgent( )
-{
-    while( NowYear < 2030 )
-    {
-        WaitBarrier( );
-        // printf( "MyAgent: %d\n", NowYear );
-        WaitBarrier( );
-    }
-}
-
-// specify how many threads will be in the barrier:
-//	(also init's the Lock)
-
-void
-InitBarrier( int n )
-{
-    NumInThreadTeam = n;
-    NumAtBarrier = 0;
-	omp_init_lock( &Lock );
-}
-
-
-// have the calling thread wait here until all the other threads catch up:
-
-void
-WaitBarrier( )
-{
-    omp_set_lock( &Lock );
-    {
-            NumAtBarrier++;
-            if( NumAtBarrier == NumInThreadTeam )
-            {
-                    NumGone = 0;
-                    NumAtBarrier = 0;
-                    // let all other threads get back to what they were doing
-		// before this one unlocks, knowing that they might immediately
-		// call WaitBarrier( ) again:
-                    while( NumGone != NumInThreadTeam-1 );
-                    omp_unset_lock( &Lock );
-                    return;
-            }
-    }
-    omp_unset_lock( &Lock );
-
-    while( NumAtBarrier != 0 );	// this waits for the nth thread to arrive
-
-    #pragma omp atomic
-    NumGone++;			// this flags how many threads have returned
 }
