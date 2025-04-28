@@ -159,11 +159,11 @@ void Deer()
         float grainPerDeer = NowHeight / (float)(NowNumDeer > 0 ? NowNumDeer : 1);
 
         if(grainPerDeer >= 3.0)  // Good conditions for population growth
-            nextNumDeer += Ranf(0, 6); 
+            nextNumDeer += Ranf(2, 8); 
         else if(grainPerDeer >= 1.0)  // Stable conditions
             nextNumDeer += Ranf(-2, 4);
         else  // Scarce food conditions
-            nextNumDeer  += Ranf(-2, 0);
+            nextNumDeer  += Ranf(-4, 0);
 
         if(NowNumPredator > 0)
             nextNumDeer -= (int)(NowNumPredator * ONE_PREDATOR_EATS_PER_MONTH);
