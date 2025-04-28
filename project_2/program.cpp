@@ -160,17 +160,17 @@ void Deer()
         nextNumDeer = NowNumDeer;  // Start from current population
         
         if(grainPerDeer >= 3.0)  // Good conditions for population growth
-            NowNumDeer += Ranf(0, 3); 
+            nextNumDeer += Ranf(0, 3); 
         else if(grainPerDeer >= 1.0)  // Stable conditions
-            NowNumDeer += Ranf(-1, 2);
+            nextNumDeer += Ranf(-1, 2);
         else  // Scarce food conditions
-            NowNumDeer += Ranf(-2, 0);
+            nextNumDeer  += Ranf(-2, 0);
 
         if(NowNumPredator > 0)
-            NowNumDeer -= (int)(NowNumPredator * ONE_PREDATOR_EATS_PER_MONTH);
+            nextNumDeer -= (int)(NowNumPredator * ONE_PREDATOR_EATS_PER_MONTH);
             
         if(NowNumDeer < 0)
-            NowNumDeer = 0;
+            nextNumDeer = 0;
             
         // Done computing - wait for all threads
         WaitBarrier(B_COMPUTE);
@@ -270,8 +270,8 @@ void Watcher( )
         if( NowPrecip < 0. )
             NowPrecip = 0.;
 
-        printf( "Year: %d Month: %d Temp: %f Precip: %f Height: %f Deer: %d\n",
-                NowYear, NowMonth, NowTemp, NowPrecip, NowHeight, NowNumDeer );
+        printf( "Year: %d Month: %d Temp: %f Precip: %f GrainHeight: %f Deer: %d Predators: %d\n",
+                NowYear, NowMonth, NowTemp, NowPrecip, NowHeight, NowNumDeer, NowNumPredator );
         NowMonth++;
         if( NowMonth == 12 )
         {
