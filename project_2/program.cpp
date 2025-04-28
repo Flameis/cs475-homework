@@ -7,9 +7,9 @@
 
 unsigned int seed = 0;
 
-const float GRAIN_GROWS_PER_MONTH =	       10.0;
+const float GRAIN_GROWS_PER_MONTH =	       20.0;
 const float ONE_DEER_EATS_PER_MONTH =		2.0;
-const float ONE_PREDATOR_EATS_PER_MONTH =		2.0;	// predator eats 2 deer per month
+const float ONE_PREDATOR_EATS_PER_MONTH =		1.0;	// predator eats 2 deer per month
 
 const float AVG_PRECIP_PER_MONTH =		7.0;	// average
 const float AMP_PRECIP_PER_MONTH =		6.0;	// plus or minus
@@ -159,9 +159,9 @@ void Deer()
         float grainPerDeer = NowHeight / (float)(NowNumDeer > 0 ? NowNumDeer : 1);
 
         if(grainPerDeer >= 3.0)  // Good conditions for population growth
-            nextNumDeer += Ranf(0, 3); 
+            nextNumDeer += Ranf(0, 6); 
         else if(grainPerDeer >= 1.0)  // Stable conditions
-            nextNumDeer += Ranf(-1, 2);
+            nextNumDeer += Ranf(-2, 4);
         else  // Scarce food conditions
             nextNumDeer  += Ranf(-2, 0);
 
