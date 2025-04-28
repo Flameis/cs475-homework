@@ -64,6 +64,10 @@ volatile int	NumGone;
 
 void	InitBarrier( int );
 void	WaitBarrier( );
+void    Deer();
+void    Grain();
+void    Watcher();
+void    MyAgent();
 
 float
 Ranf( float low, float high )
@@ -192,7 +196,7 @@ Deer()
 }
 
 void
-Grain( );
+Grain( )
 {
     while( NowYear < 2030 )
     {
@@ -206,7 +210,7 @@ Grain( );
 }
 
 void
-Watcher( );
+Watcher( )
 {
     while( NowYear < 2030 )
     {
@@ -218,7 +222,7 @@ Watcher( );
 }
 
 void
-MyAgent( );
+MyAgent( )
 {
     while( NowYear < 2030 )
     {
