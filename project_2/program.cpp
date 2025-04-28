@@ -295,8 +295,9 @@ int main( int argc, char *argv[ ] )
     NowYear  = 2025;
 
     // starting state (feel free to change this if you want):
-    NowNumDeer = 2;
-    NowHeight =  5.;
+    NowNumDeer = 6;
+    NowHeight =  10.;
+    NowNumPredator = 1;
 
     omp_set_num_threads( 4 );	// same as # of sections
     InitBarrier( 4 );
