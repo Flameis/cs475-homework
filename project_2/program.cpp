@@ -274,6 +274,8 @@ void Watcher( )
         if( NowPrecip < 0. )
             NowPrecip = 0.;
 
+        int Months = 0;
+        // Convert year and month to months since 2025
         Months = NowYear * 12 + NowMonth;
 
         #define CSV_OUTPUT
