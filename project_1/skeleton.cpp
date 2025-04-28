@@ -52,8 +52,6 @@ float		Ranf( float, float );
 int		Ranf( int, int );
 void		TimeOfDaySeed( ); */
 
-#include <stdlib.h>
-
 float
 Ranf( float low, float high )
 {
