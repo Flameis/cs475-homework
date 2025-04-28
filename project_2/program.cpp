@@ -34,7 +34,7 @@
 unsigned int seed = 0;
 
 const float GRAIN_GROWS_PER_MONTH =	       12.0;
-const float ONE_DEER_EATS_PER_MONTH =		1.0;
+const float ONE_DEER_EATS_PER_MONTH =		2.0;
 
 const float AVG_PRECIP_PER_MONTH =		7.0;	// average
 const float AMP_PRECIP_PER_MONTH =		6.0;	// plus or minus
@@ -181,7 +181,7 @@ Deer()
         if(NowNumDeer < 0)
             NowNumDeer = 0;
             
-        printf("Deer: %d\n", NowNumDeer);
+        // printf("Deer: %d\n", NowNumDeer);
         WaitBarrier();
     }
 }
@@ -195,7 +195,7 @@ Grain( )
         NowHeight += (GRAIN_GROWS_PER_MONTH * NowPrecip) - (NowNumDeer * ONE_DEER_EATS_PER_MONTH);
         if( NowHeight < 0. )
             NowHeight = 0.;
-        printf( "Grain: %f\n", NowHeight );
+        // printf( "Grain: %f\n", NowHeight );
         WaitBarrier( );
     }
 }
@@ -234,7 +234,7 @@ MyAgent( )
     while( NowYear < 2030 )
     {
         WaitBarrier( );
-        printf( "MyAgent: %d\n", NowYear );
+        // printf( "MyAgent: %d\n", NowYear );
         WaitBarrier( );
     }
 }
