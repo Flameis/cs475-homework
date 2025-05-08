@@ -104,19 +104,18 @@ main( int argc, char *argv[ ] )
 		time0 = omp_get_wtime( );
 
         	// the #pragma goes here -- you figure out what it needs to look like:
+		#pragma omp parallel for schedule(static)
 		for( int i = 0; i < NUMCITIES; i++ )
 		{
-			int capitalnumber = -1;
-			float mindistance = 1.e+37;
+			int capitalnumber = -1; 
 
 			for( int k = 0; k < NUMCAPITALS; k++ )
 			{
 				float dist = Distance( i, k );
 				if( dist < mindistance )
 				{
-					?????
-					?????
-					?????
+					capitalnumber = k;
+					mindistance = dist;
 				}
 			}
 
@@ -135,8 +134,8 @@ main( int argc, char *argv[ ] )
 		// get the average longitude and latitude for each capital:
 		for( int k = 0; k < NUMCAPITALS; k++ )
 		{
-			Capitals[k].longitude = ?????
-			Capitals[k].latitude  = ?????
+			Capitals[k].longitude = Capitals[k].longsum / (float)Capitals[k].numsum;
+			Capitals[k].latitude  = Capitals[k].latsum / (float)Capitals[k].numsum;
 		}
 	}
 
@@ -147,7 +146,23 @@ main( int argc, char *argv[ ] )
 	// this is the extra credit:
 	for( int k = 0; k < NUMCAPITALS; k++ )
 	{
-		?????
+		float mindistance = 1.0e20;
+		int citynumber = -1;
+
+		for( int i = 0; i < NUMCITIES; i++ )
+		{
+			float dist = Distance( i, k );
+			if( dist < mindistance )
+			{
+				mindistance = dist;
+				citynumber = i;
+			}
+		}
+
+		Capitals[k].name = Cities[citynumber].name;
+		Capitals[k].capitalnumber = citynumber;
+		fprintf( stderr, "\t%3d: %8.2f, %8.2f, %s\n", k, Capitals[k].longitude, Capitals[k].latitude, Capitals[k].name.c_str() );
+		fprintf( stderr, "\t %3d: %8.2f, %8.2f, %s\n", k, Capitals[k].longitude, Capitals[k].latitude, Cities[citynumber].name.c_str() );
 	}
 
 
