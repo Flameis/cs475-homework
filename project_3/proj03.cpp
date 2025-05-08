@@ -107,7 +107,8 @@ main( int argc, char *argv[ ] )
 		#pragma omp parallel for schedule(static)
 		for( int i = 0; i < NUMCITIES; i++ )
 		{
-			int capitalnumber = -1; 
+			int capitalnumber = -1;
+			float mindistance = 1.e+37;
 
 			for( int k = 0; k < NUMCAPITALS; k++ )
 			{
@@ -159,10 +160,7 @@ main( int argc, char *argv[ ] )
 			}
 		}
 
-		Capitals[k].name = Cities[citynumber].name;
-		Capitals[k].capitalnumber = citynumber;
-		fprintf( stderr, "\t%3d: %8.2f, %8.2f, %s\n", k, Capitals[k].longitude, Capitals[k].latitude, Capitals[k].name.c_str() );
-		fprintf( stderr, "\t %3d: %8.2f, %8.2f, %s\n", k, Capitals[k].longitude, Capitals[k].latitude, Cities[citynumber].name.c_str() );
+		fprintf(stderr, "\t%3d: %8.2f, %8.2f, %s\n", k, Capitals[k].longitude, Capitals[k].latitude, Cities[citynumber].name.c_str());
 	}
 
 
