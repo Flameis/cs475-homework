@@ -120,6 +120,9 @@ main( int argc, char *argv[ ] )
 				}
 			}
 
+			Cities[i].capitalnumber = capitalnumber;
+    		Cities[i].mindistance = mindistance;
+
 			int k = Cities[i].capitalnumber;
 			// this is here for the same reason as the Trapezoid noteset uses it:
 			#pragma omp critical
