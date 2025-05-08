@@ -13,6 +13,6 @@ do
         output=$(./proj03)
         
         # Extract the last line and append it to results.csv
-        echo "$output" | tail -n 1 >> results.csv
+        echo "$output" | tail -n 2 >> results.csv
     done
 done
