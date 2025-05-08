@@ -6,7 +6,10 @@
 
 ## Machine Information
 * rabbit.engr.oregonstate.edu
-* Linux
+* CentOS Linux release 7.9.2009 (Core)
 * g++ compiler
 
-## Performmance Data
+## Performance Data
+![Data](image.png)
+
+## Analysis

@@ -174,13 +174,13 @@ main( int argc, char *argv[ ] )
 			// fprintf( stderr, "\t%3d:  %8.2f , %8.2f\n", k, Capitals[k].longitude, Capitals[k].latitude );
 
 			//if you did the extra credit, use this fprintf instead:
-			// fprintf( stderr, "\t%3d:  %8.2f , %8.2f , %s\n", k, Capitals[k].longitude, Capitals[k].latitude, Capitals[k].name.c_str() );
+			fprintf( stderr, "\t%3d:  %8.2f , %8.2f , %s\n", k, Capitals[k].longitude, Capitals[k].latitude, Capitals[k].name.c_str() );
 		}
 	}
 #ifdef CSV
-    fprintf(stdout, "%d,%d,%d,%.2f\n", NUMT, NUMCITIES, NUMCAPITALS, megaCityCapitalsPerSecond );
+    fprintf(stderr, "%d,%d,%d,%.2f\n", NUMT, NUMCITIES, NUMCAPITALS, megaCityCapitalsPerSecond );
 #else
-    fprintf(stdout, "%2d threads : %4d cities ; %4d capitals; megatrials/sec = %8.3lf\n",
+    fprintf(stderr, "%2d threads : %4d cities ; %4d capitals; megatrials/sec = %8.3lf\n",
                 NUMT, NUMCITIES, NUMCAPITALS, megaCityCapitalsPerSecond );
 #endif
 
