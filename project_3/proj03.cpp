@@ -162,8 +162,6 @@ main( int argc, char *argv[ ] )
 				citynumber = i;
 			}
 		}
-
-		fprintf(stderr, "\t%3d: %8.2f, %8.2f, %s\n", k, Capitals[k].longitude, Capitals[k].latitude, Cities[citynumber].name.c_str());
 	}
 
 
@@ -173,10 +171,10 @@ main( int argc, char *argv[ ] )
 	{
 		for( int k = 0; k < NUMCAPITALS; k++ )
 		{
-			fprintf( stderr, "\t%3d:  %8.2f , %8.2f\n", k, Capitals[k].longitude, Capitals[k].latitude );
+			// fprintf( stderr, "\t%3d:  %8.2f , %8.2f\n", k, Capitals[k].longitude, Capitals[k].latitude );
 
 			//if you did the extra credit, use this fprintf instead:
-			//fprintf( stderr, "\t%3d:  %8.2f , %8.2f , %s\n", k, Capitals[k].longitude, Capitals[k].latitude, Capitals[k].name.c_str() );
+			fprintf( stderr, "\t%3d:  %8.2f , %8.2f , %s\n", k, Capitals[k].longitude, Capitals[k].latitude, Capitals[k].name.c_str() );
 		}
 	}
 #ifdef CSV
