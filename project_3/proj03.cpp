@@ -178,7 +178,7 @@ main( int argc, char *argv[ ] )
 		}
 	}
 #ifdef CSV
-    fprintf(stderr, "%2d , %4d , %4d , %8.3lf:\n", NUMT, NUMCITIES, NUMCAPITALS, megaCityCapitalsPerSecond );
+    fprintf(stdout, "%2d,%4d,%4d,%8.3lf:\n", NUMT, NUMCITIES, NUMCAPITALS, megaCityCapitalsPerSecond );
 #else
     fprintf(stdout, "%2d threads : %4d cities ; %4d capitals; megatrials/sec = %8.3lf\n",
                 NUMT, NUMCITIES, NUMCAPITALS, megaCityCapitalsPerSecond );
