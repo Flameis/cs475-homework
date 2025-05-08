@@ -162,8 +162,8 @@ main( int argc, char *argv[ ] )
 				citynumber = i;
 			}
 		}
+		Capitals[k].name = Cities[citynumber].name;
 	}
-
 
 	// print the longitude-latitude of each new capital city:
 	// you only need to do this once per some number of NUMCAPITALS -- do it for the 1-thread version:
