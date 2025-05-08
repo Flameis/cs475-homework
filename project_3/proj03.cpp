@@ -69,8 +69,8 @@ main( int argc, char *argv[ ] )
 #ifdef _OPENMP
 	fprintf( stderr, "OpenMP is supported -- version = %d\n", _OPENMP );
 #else
-        fprintf( stderr, "No OpenMP support!\n" );
-        return 1;
+    fprintf( stderr, "No OpenMP support!\n" );
+    return 1;
 #endif
 
 	// make sure we have the data correctly:
@@ -178,9 +178,9 @@ main( int argc, char *argv[ ] )
 		}
 	}
 #ifdef CSV
-        fprintf(stderr, "%2d , %4d , %4d , %8.3lf:\n", NUMT, NUMCITIES, NUMCAPITALS, megaCityCapitalsPerSecond );
+    fprintf(stderr, "%2d , %4d , %4d , %8.3lf:\n", NUMT, NUMCITIES, NUMCAPITALS, megaCityCapitalsPerSecond );
 #else
-        fprintf(stderr, "%2d threads : %4d cities ; %4d capitals; megatrials/sec = %8.3lf\n",
+    fprintf(stderr, "%2d threads : %4d cities ; %4d capitals; megatrials/sec = %8.3lf\n",
                 NUMT, NUMCITIES, NUMCAPITALS, megaCityCapitalsPerSecond );
 #endif
 
