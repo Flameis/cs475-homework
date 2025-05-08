@@ -145,7 +145,7 @@ void WaitBarrier(BarrierType bt)
 
 void Deer()
 {
-    while( NowYear < 2030 )
+    while( NowYear <= 2030 )
     {
         // Wait for compute
         if (CurrentBarrier != B_COMPUTE)
@@ -184,7 +184,7 @@ void Deer()
 
 void Grain( )
 {
-    while( NowYear < 2030 )
+    while( NowYear <= 2030 )
     {
         if (CurrentBarrier != B_COMPUTE)
             WaitBarrier(CurrentBarrier);
@@ -215,7 +215,7 @@ void Grain( )
 
 void Predator( )
 {
-    while( NowYear < 2030 )
+    while( NowYear <= 2030 )
     {
         if (CurrentBarrier != B_COMPUTE)
             WaitBarrier(CurrentBarrier);
@@ -251,7 +251,7 @@ void Predator( )
 
 void Watcher( )
 {
-    while( NowYear < 2030 )
+    while( NowYear <= 2030 )
     {
         // Wait for compute
         if (CurrentBarrier != B_COMPUTE)
