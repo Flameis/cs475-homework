@@ -66,12 +66,12 @@ Distance( int city, int capital )
 int
 main( int argc, char *argv[ ] )
 {
-#ifdef _OPENMP
+/* #ifdef _OPENMP
 	fprintf( stderr, "OpenMP is supported -- version = %d\n", _OPENMP );
 #else
     fprintf( stderr, "No OpenMP support!\n" );
     return 1;
-#endif
+#endif */
 
 	// make sure we have the data correctly:
 	//for( int i = 0; i < NUMCITIES; i++ )
@@ -178,7 +178,7 @@ main( int argc, char *argv[ ] )
 		}
 	}
 #ifdef CSV
-    fprintf(stdout, "%2d,%4d,%4d,%8.3lf:\n", NUMT, NUMCITIES, NUMCAPITALS, megaCityCapitalsPerSecond );
+    fprintf(stdout, "%2d,%4d,%4d,%8.3lf\n", NUMT, NUMCITIES, NUMCAPITALS, megaCityCapitalsPerSecond );
 #else
     fprintf(stdout, "%2d threads : %4d cities ; %4d capitals; megatrials/sec = %8.3lf\n",
                 NUMT, NUMCITIES, NUMCAPITALS, megaCityCapitalsPerSecond );
