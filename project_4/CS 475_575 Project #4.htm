@@ -1,0 +1,268 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+  </style>
+
+
+<title>
+CS 475/575 Project #4
+</title>
+
+<style>:is([id*='google_ads_iframe'],[id*='taboola-'],.taboolaHeight,.taboola-placeholder,#top-ad,#credential_picker_container,#credentials-picker-container,#credential_picker_iframe,[id*='google-one-tap-iframe'],#google-one-tap-popup-container,.google-one-tap__module,.google-one-tap-modal-div,#amp_floatingAdDiv,#ez-content-blocker-container) {display:none!important;min-height:0!important;height:0!important;}</style></head>
+
+<body background="CS%20475_575%20Project%20%234_files/backgr.jpg">
+
+<center>
+<img src="CS%20475_575%20Project%20%234_files/osu.jpg" align="middle">
+<h2>CS 475/575 -- Spring Quarter 2025</h2>
+<h2>Project #4</h2>
+<h3>Vectorized Array Multiplication and Multiplication/Reduction using SSE</h3>
+<h3>60 Points</h3>
+<h3>Due: May 14</h3>
+</center>
+
+
+<p>
+</p><hr size="4">
+<p>
+
+<i>This page was last updated: March 25, 2025</i>
+
+
+<!--
+<p>
+<hr size=4>
+<p>
+
+<center>
+<img src="../underconstr.gif">
+<br>
+<font size=+2 color=#8f0000>
+<blink>
+<b> 
+Under Construction:
+<br>
+This content is not final until you see this message go away!
+</b>
+</blink>
+</font>
+</center>
+-->
+
+
+
+</p><p>
+</p><hr size="4">
+<p>
+
+</p><h3>Introduction</h3>
+
+<p>
+There are many problems in scientific and engineering computing when you want to multiply
+arrays of numbers together: C[i] = A[i] * B[i], or when you want to multiply arrays of numbers together
+and add up all the multiplies to produce a single sum
+(Fourier transformation, convolution, autocorrelation, etc.):
+sum = &#931;A[i]*B[i]
+
+</p><p>
+This project is to test array multiplication and multiplication/reduction using usual C/C++ programming and SIMD.
+
+</p><p>
+<b>
+<font color="#8f0000">
+For the "control groups" benchmarks, do not use OpenMP parallel for-loops.
+Just use straight C/C++ for-loops.
+In the non-extra-credit part of this project, we will only use OpenMP for the timing.
+</font>
+</b>
+
+</p><p>
+
+</p><h3>Requirements</h3>
+
+<ol>
+
+<p>
+</p><li>
+Use the supplied SIMD SSE assembly language code to run an array multiplication timing experiment.
+Run the same experiment a second time using your own C/C++ array multiplication code.
+
+<p>
+</p></li><li>
+Use the supplied SIMD SSE assembly language code to run an array multiplication/reduction timing experiment.
+Run the same experiment a second time using your own C/C++ array multiplication/reduction code.
+
+<p>
+</p></li><li>
+Use different array sizes from 1K to 8M.
+The choice of in-between values is up to you,
+but pick enough values that will make for a good graph.
+
+<p>
+</p></li><li>
+Run each array-size test a certain number of tries.
+Use the peak value for the performance that you record.
+
+<p>
+</p></li><li>
+We will not be graphing performance (e.g., megamults/sec) -- we will be graphing <i>SpeedUp</i>.
+
+<p>
+</p></li><li>
+For the  C[i] = A[i] * B[i] experiment, create a table and a graph showing SSE/Non-SSE speed-up as a function of array size.
+Speedup in this case will be (P = Performance, T = Elapsed Time):
+<p>
+S = Psse/Pnon-sse = Tnon-sse/Tsse
+
+</p><p>
+</p></li><li>
+For the sum = &#931;A[i]*B[i] experiment, create a table and a graph showing SSE/Non-SSE speed-up as a function of array size.
+Speedup in this case will be (P = Performance, T = Elapsed Time):
+<p>
+S = Psse/Pnon-sse = Tnon-sse/Tsse
+
+</p><p>
+</p></li><li>
+This would normally be 2 graphs with one curve each.
+If you want, you can also do this as one graph with 2 curves.
+But, somehow, you need to end up graphing two curves.
+
+<p>
+</p></li><li>
+<font color="#8f0000">
+<b>
+Note: this is not a multithreading assignment, so you don't need to worry about a NUMT.
+Don't use any OpenMP-isms except for getting the timing.
+</b>
+</font>
+
+<p>
+</p></li><li>
+The Y-axis performance units in this case will be "Speed-Up", i.e., dimensionless.
+Don't use any units that involve xxx/second.
+
+<p>
+</p></li><li>
+Parallel Fraction doesn't apply to SIMD parallelism, so don't compute one.
+
+<p>
+</p></li><li>
+Your commentary write-up (turned in as a PDF file) should tell us:
+<ol>
+<li>What machine you ran this on
+</li><li>Show the 2 tables of performances for each array size and the corresponding speedups
+</li><li>Show the graphs (or graph) of SIMD/non-SIMD speedup versus 
+array size (either one graph with two curves, or two graphs each with 
+one curve)
+</li><li>What patterns are you seeing in the speedups?
+</li><li>Are they consistent across a variety of array sizes?
+</li><li>Why or why not, do you think?
+</li></ol>
+
+</li></ol>
+
+
+<p>
+</p><h3>SSE SIMD code:</h3>
+
+<ul>
+
+<p>
+</p><li>
+Find starter code in the file:
+<a href="https://web.engr.oregonstate.edu/~mjb/cs575/Projects/all04.cpp"><b><font size="+2">all04.cpp</font></b></a>.
+
+<p>
+</p></li><li>
+<font color="#8f0000">
+<b>
+Note that you are linking in the OpenMP library <i>only</i> because we are using it for timing.
+</b>
+</font>
+
+<p>
+</p></li><li>
+<font color="#8f0000">
+<b>
+Because this code uses assembly language, this code is not portable.
+I know for sure it works on flip.
+I know for sure it works on rabbit.
+It will not work in Visual Studio.
+You are welcome to try it other places, but there are no guarantees.
+</b>
+</font>
+
+<!--
+<p>
+<li>
+<b>
+<font color=#8f0000>
+Because simd.p4.cpp uses assembly language, do not use "-O3".
+It jumbles up the use of the registers.
+</font>
+</b>
+-->
+
+<p>
+</p></li><li>
+You can run the tests one-at-a-time, or you can script them
+by making the array size a <tt>#define</tt> that you set from outside
+the program.
+
+</li></ul>
+
+<p>
+</p><h3>Warning!</h3>
+
+<p>
+<font color="#8f0000">
+<b>
+Do not use any optimization flags when compiling this code.
+It jumbles up the use of the registers.
+<br>
+Do not insert any printf's in the SSE code.
+It jumbles up the use of the registers.
+</b>
+</font>
+
+<!--
+<p>
+<i>Do not use the icc or icpc compilers when compiling the simd.p4.cpp code.</i>
+It jumbles up the use of the registers.
+-->
+
+</p><p>
+</p><h3>Extra Credit: Combining SIMD with OpenMP</h3>
+
+<p>
+Combine multithreading and SIMD in a single test.
+In this case, you will vary <i>both</i> the array size and the number of threads (NUMT).
+Show your table of performances.
+Produce a graph similar to the one on Slide #21 of the <i>SIMD Vector</i> notes, using your numbers.
+Add a brief discussion of what your curves are showing and why you think it is working this way.
+
+
+
+</p><p>
+</p><h3>Grading:</h3>
+
+<p>
+<table border="1">
+<tbody><tr><th>Feature</th><th>Points
+</th></tr><tr><td>Table of Array Multiply performances and speedups</td><td align="right">10
+</td></tr><tr><td>Graph of Array Multiply speedupe</td><td align="right">10
+</td></tr><tr><td>Table of Array Multiply/Reduction performances and speedups</td><td align="right">10
+</td></tr><tr><td>Graph of Array Multiply/Reduction speedup curve</td><td align="right">10
+</td></tr><tr><td>Commentary</td><td align="right">20
+</td></tr><tr><td>Extra Credit</td><td align="right">+5
+</td></tr><tr><th align="left">Potential Total</th><th align="right">65
+</th></tr></tbody></table>
+
+
+
+
+</p></body></html>
