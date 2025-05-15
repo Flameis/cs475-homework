@@ -72,7 +72,6 @@ main( int argc, char *argv[ ] )
 	double speedup = mms/mmn;
 	fprintf( stderr, "(%6.2lf)\t", speedup );
 
-	// fprintf( stderr, "%8.1f,%8.1f,%8.1f,%8.1f,%10.2lf,%6.2lf\n", C[ARRAYSIZE-1], sumn, sums, megaMults, megaMultAdds, speedup );
 
 	maxPerformance = 0.;
 	float sumn, sums;
@@ -111,7 +110,7 @@ main( int argc, char *argv[ ] )
 // #define CSV
 #ifdef CSV
     // fprintf( stderr, "[ %8.1f , %8.1f , %8.1f ]\n", C[ARRAYSIZE-1], sumn, sums );
-	fprintf( stderr, "%8.1f,%8.1f,%8.1f,%8.1f,%10.2lf,%6.2lf\n", C[ARRAYSIZE-1], sumn, sums, megaMults, megaMultAdds, speedup );
+	// fprintf( stderr, "%8.1f,%8.1f,%8.1f,%8.1f,%10.2lf,%6.2lf\n", C[ARRAYSIZE-1], sumn, sums, megaMults, megaMultAdds, speedup );
 #else
 #endif
 
