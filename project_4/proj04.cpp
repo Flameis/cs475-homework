@@ -7,7 +7,6 @@
 #include <sys/resource.h>
 #include <omp.h>
 
-// SSE stands for Streaming SIMD Extensions
 
 #define SSE_WIDTH	4
 #define ALIGNED		__attribute__((aligned(16)))
