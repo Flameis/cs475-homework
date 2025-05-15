@@ -6,7 +6,7 @@ do
     # echo "ARRAYSIZE,SUMN,SUMS,MEGAMULTS,MEGAMULTADDS,SPEEDUP" > results.csv
 
     t=$n * $n
-    g++ proj04.cpp -ARRAYSIZE=$t proj04 -lm -fopenmp
+    g++ -o -masm=intel proj04.cpp -ARRAYSIZE=$t proj04 -lm -fopenmp
     
     ./proj04 >> results.csv
 done
