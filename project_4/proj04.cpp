@@ -13,6 +13,7 @@
 #define SSE_WIDTH	4
 #define ALIGNED		__attribute__((aligned(16)))
 
+#define CSV
 
 #define NUMTRIES	100
 
@@ -71,8 +72,11 @@ main( int argc, char *argv[ ] )
 	fprintf( stderr, "S %10.2lf\t", megaMults );
 	double mms = megaMults;
 	double speedup = mms/mmn;
-	fprintf( stderr, "(%6.2lf)\t", speedup );
+	// fprintf( stderr, "(%6.2lf)\t", speedup );
 
+#ifdef CSV
+	fprintf( stderr, "0,%d,%.2f\n", ARRAYSIZE, speedup );
+#endif
 
 	maxPerformance = 0.;
 	float sumn, sums;
@@ -104,13 +108,12 @@ main( int argc, char *argv[ ] )
 	fprintf( stderr, "S %10.2lf\t", megaMultAdds );
 	mms = megaMultAdds;
 	speedup = mms/mmn;
-	fprintf( stderr, "(%6.2lf)\n", speedup );
+	// fprintf( stderr, "(%6.2lf)\n", speedup );
 
 	//fprintf( stderr, "[ %8.1f , %8.1f , %8.1f ]\n", C[ARRAYSIZE-1], sumn, sums );
 
-#define CSV
 #ifdef CSV
-	fprintf( stderr, "%8.1f,%8.1f,%8.1f,%8.1f,%10.2lf,%6.2lf\n", C[ARRAYSIZE-1], sumn, sums, megaMults, megaMultAdds, speedup );
+	fprintf( stderr, "1,%d,%.2f\n", ARRAYSIZE, speedup );
 #endif
 
 	return 0;
