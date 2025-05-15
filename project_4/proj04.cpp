@@ -75,7 +75,7 @@ main( int argc, char *argv[ ] )
 	// fprintf( stderr, "(%6.2lf)\t", speedup );
 
 #ifdef CSV
-	fprintf( stdout, "0,%d,%.2f,%.2f,%.2f\n", ARRAYSIZE, mmn, mms, speedup );
+	fprintf( stdout, "non-SIMD,%d,%.2f,%.2f,%.2f\n", ARRAYSIZE, speedup );
 #endif
 
 	maxPerformance = 0.;
@@ -112,7 +112,7 @@ main( int argc, char *argv[ ] )
 	//fprintf( stderr, "[ %8.1f , %8.1f , %8.1f ]\n", C[ARRAYSIZE-1], sumn, sums );
 
 #ifdef CSV
-	fprintf( stdout, "1,%d,%.2f,%.2f,%.2f\n", ARRAYSIZE, mmn, mms, speedup );
+	fprintf( stdout, "SIMD,%d,%.2f,%.2f,%.2f\n", ARRAYSIZE, speedup );
 #endif
 
 	return 0;
