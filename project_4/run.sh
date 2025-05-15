@@ -11,8 +11,8 @@ do
     # Check if compilation was successful
     if [ $? -eq 0 ]; then
         # Run the program
-        ./proj04 
-        # >> results.csv
+        echo "ARRAYSIZE,SUMN,SUMS,MEGAMULTS,MEGAMULTADDS,SPEEDUP" > results.csv
+        ./proj04 >> results.csv
     else
         echo "Compilation failed for array size $n"
     fi

@@ -108,12 +108,10 @@ main( int argc, char *argv[ ] )
 
 	//fprintf( stderr, "[ %8.1f , %8.1f , %8.1f ]\n", C[ARRAYSIZE-1], sumn, sums );
 
-// #define CSV
-// #ifdef CSV
-    // fprintf( stderr, "[ %8.1f , %8.1f , %8.1f ]\n", C[ARRAYSIZE-1], sumn, sums );
-	// fprintf( stderr, "%8.1f,%8.1f,%8.1f,%8.1f,%10.2lf,%6.2lf\n", C[ARRAYSIZE-1], sumn, sums, megaMults, megaMultAdds, speedup );
-// #else
-// #endif
+#define CSV
+#ifdef CSV
+	fprintf( stderr, "%8.1f,%8.1f,%8.1f,%8.1f,%10.2lf,%6.2lf\n", C[ARRAYSIZE-1], sumn, sums, megaMults, megaMultAdds, speedup );
+#endif
 
 	return 0;
 }
