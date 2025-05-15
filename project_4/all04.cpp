@@ -104,7 +104,14 @@ main( int argc, char *argv[ ] )
 	mms = megaMultAdds;
 	speedup = mms/mmn;
 	fprintf( stderr, "(%6.2lf)\n", speedup );
-	//fprintf( stderr, "[ %8.1f , %8.1f , %8.1f ]\n", C[ARRAYSIZE-1], sumn, sums );
+
+#define CSV
+#ifdef CSV
+    // fprintf( stderr, "[ %8.1f , %8.1f , %8.1f ]\n", C[ARRAYSIZE-1], sumn, sums );
+	fprintf( stderr, "ARRAYSIZE,SUMN,SUMS,MEGAMULTS,MEGAMULTADDS,SPEEDUP\n" );
+	fprintf( stderr, "%8.1f,%8.1f,%8.1f,%8.1f,%10.2lf,%6.2lf\n", C[ARRAYSIZE-1], sumn, sums, megaMults, megaMultAdds, speedup );
+#else
+#endif
 
 	return 0;
 }

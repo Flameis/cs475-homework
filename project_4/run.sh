@@ -1,13 +1,11 @@
 #!/bin/bash
 
-# Create or clear the results.csv file at the start
-echo "NUMT,NUMCITIES,NUMCAPITALS,Performance" > results.csv
-
-for n in 2 3 4 5 10 15 20 30 40 50
+# This script compiles the C++ program and runs it with different array sizes from 1K to 8M
+for n in 1024 2048 4096 8192 16384 32768 65536 131072 262144 524288 1048576 2097152 4194304 8388608
 do
-    g++ all04.cpp -ARRAYSIZE=$n -o proj04 -lm -fopenmp
+    t = $n * $n
+    g++ all04.cpp -ARRAYSIZE=t -o proj04 -lm -fopenmp
     
-    # Run the program and append output directly to results.csv
     ./all04 >> results.csv
 done
 
