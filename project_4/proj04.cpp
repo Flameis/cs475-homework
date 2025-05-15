@@ -112,7 +112,7 @@ main( int argc, char *argv[ ] )
 	//fprintf( stderr, "[ %8.1f , %8.1f , %8.1f ]\n", C[ARRAYSIZE-1], sumn, sums );
 
 #ifdef CSV
-	fprintf( stdout, "SIMD,%d,%.2f,%.2f,%.2f\n", ARRAYSIZE, speedup );
+	fprintf( stdout, "SIMD,%d,%.2f\n", ARRAYSIZE, speedup );
 #endif
 
 	return 0;
