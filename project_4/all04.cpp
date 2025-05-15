@@ -164,8 +164,6 @@ SimdMul( float *a, float *b,   float *c,   int len )
 	}
 }
 
-
-
 float
 SimdMulSum( float *a, float *b, int len )
 {
