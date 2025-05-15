@@ -6,9 +6,15 @@ do
     # echo "ARRAYSIZE,SUMN,SUMS,MEGAMULTS,MEGAMULTADDS,SPEEDUP" > results.csv
 
     t=$n * $n
-    g++ -o -masm=intel proj04.cpp -ARRAYSIZE=$t proj04 -lm -fopenmp
+    g++ -o proj04 proj04.cpp -fopenmp -msse4.1 -O3
     
-    ./proj04 >> results.csv
+    # Check if compilation was successful
+    if [ $? -eq 0 ]; then
+        # Run the program
+        ./proj04 >> results.csv
+    else
+        echo "Compilation failed"
+    fi
 done
 
 echo "Results have been saved to results.csv"
