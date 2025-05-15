@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This script compiles the C++ program and runs it with different array sizes from 1K to 8M
-echo "ARRAYSIZE,SUMN,SUMS,MEGAMULTS,MEGAMULTADDS,SPEEDUP" > results.csv
+echo "bASM,ARRAYSIZE,SPEEDUP" > results.csv
 
 for n in 1024 2048 4096 8192 16384 32768 65536 131072 262144 524288 1048576 2097152 4194304 8388608
 do
@@ -11,7 +11,6 @@ do
     # Check if compilation was successful
     if [ $? -eq 0 ]; then
         # Run the program
-        echo "ARRAYSIZE,SPEEDUP" > results.csv
         ./proj04 >> results.csv
     else
         echo "Compilation failed for array size $n"
