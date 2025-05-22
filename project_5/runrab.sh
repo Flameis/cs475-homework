@@ -4,6 +4,6 @@ do
     for b in 8 32 64 128 256
     do
             /usr/local/apps/cuda/cuda-10.1/bin/nvcc -DNUMTRIALS=$t -DBLOCKSIZE=$b -o proj05  proj05.cu
-            ./proj05
+            ./proj05 >> results.csv
     done
 done
