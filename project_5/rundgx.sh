@@ -6,7 +6,7 @@
 #SBATCH  -o  montecarlo.out
 #SBATCH  -e  montecarlo.err
 #SBATCH  --mail-type=BEGIN,END,FAIL
-#SBATCH  --mail-user=mjb@oregonstate.edu
+#SBATCH  --mail-user=scovell@oregonstate.edu
 for t in 2048 8192 131072 2097152
 do
     for b in 8 16 32 64 128
