@@ -32,20 +32,19 @@
 #endif
 
 // ranges for the random numbers:
-const float GMIN =	20.0;	// ground distance in meters
-const float GMAX =	30.0;	// ground distance in meters
-const float HMIN =	10.0;	// cliff height in meters
-const float HMAX =	20.0;	// cliff height in meters
+const float GMIN =	10.0;	// ground distance in meters
+const float GMAX =	20.0;	// ground distance in meters
+const float HMIN =	20.0;	// cliff height in meters
+const float HMAX =	30.0;	// cliff height in meters
 const float DMIN  =	10.0;	// distance to castle in meters
 const float DMAX  =	20.0;	// distance to castle in meters
-const float VMIN  =	10.0;	// intial cnnonball velocity in meters / sec
+const float VMIN  =	20.0;	// intial cnnonball velocity in meters / sec
 const float VMAX  =	30.0;	// intial cnnonball velocity in meters / sec
 const float THMIN = 	70.0;	// cannonball launch angle in degrees
 const float THMAX =	80.0;	// cannonball launch angle in degrees
 
-// constants:
 const float GRAVITY =	-9.8;	// acceleraion due to gravity in meters / sec^2
-const float TOL     = 	 5.0;	// tolerance in cannonball hitting the castle in meters
+const float TOL = 5.0;		// tolerance in cannonball hitting the castle in meters
 				// castle is destroyed if cannonball lands between d-TOL and d+TOL
 
 /* // function prototypes:
