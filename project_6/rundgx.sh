@@ -1,10 +1,19 @@
 #!/bin/bash
-#SBATCH  -J  MonteCarlo
+#SBATCH  -J  Proj06
 #SBATCH  -A  cs475-575
-#SBATCH  -p  classgpufinal
+#SBATCH  -p  classgputest
+#SBATCH  --constraint=v100
 #SBATCH  --gres=gpu:1
-#SBATCH  -o  montecarlo.out
-#SBATCH  -e  montecarlo.err
+#SBATCH  -o  proj06.out
+#SBATCH  -e  proj06.err
+#SBATCH  --mail-type=BEGIN,END,FAIL
+#SBATCH  --mail-user=joeparallel@oregonstate.edu
 
-g++ -o proj06 proj06.cpp -lm -fopenmp
-./proj06
+for s in 4096 16384 65536 262144 1048576 4194304
+do
+        for b in 8 32 64 128 256
+        do
+                g++ -DDATASIZE=$s -DLOCALSIZE=$b -o proj06 proj06.cpp /usr/local/apps/cuda/11.7/lib64/libOpenCL.so.1  -lm -fopenmp
+                ./proj06
+        done
+done

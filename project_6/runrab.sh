@@ -1,9 +1,9 @@
 #!/bin/bash
-for t in 1024 4096 16384 65536 262144 1048576 2097152
+for s in 4096 16384 65536 262144 1048576 4194304
 do
-    for b in 8 32 64 128 256
-    do
-        g++ -o proj06 proj06.cpp -lm -fopenmp -lOpenCL -DATASIZE=$t -LOCALSIZE=$b
-        ./proj06
-    done
+        for b in 8 32 64 128 256
+        do
+                g++ -DDATASIZE=$s -DLOCALSIZE=$b -o proj06 proj06.cpp /usr/local/apps/cuda/10.1/lib64/libOpenCL.so.1  -lm -fopenmp
+                ./proj06
+        done
 done
