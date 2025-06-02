@@ -260,7 +260,7 @@ main( int argc, char *argv[ ] )
 	Solve3( sumx4, sumx3, sumx2, sumx, sumx2y, sumxy, sumy, DATASIZE,   &Q, &L, &C );
 
 
-#define CSV
+// #define CSV
 
 #ifdef CSV
 	fprintf( stderr, "%8d , %6d , %10.2lf\n",
