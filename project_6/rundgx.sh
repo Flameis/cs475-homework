@@ -6,6 +6,8 @@
 #SBATCH  --gres=gpu:1
 #SBATCH  -o  proj06.out
 #SBATCH  -e  proj06.err
+#SBATCH  --mail-type=BEGIN,END,FAIL
+#SBATCH  --mail-user=scovell@oregonstate.edu
 
 for s in 4096 16384 65536 262144 1048576 4194304
 do
