@@ -9,10 +9,9 @@
 #SBATCH  --mail-type=BEGIN,END,FAIL
 #SBATCH  --mail-user=scovell@oregonstate.edu
 
-module install FindBin
 module load openmpi
 mpic++ proj07.cpp -o proj07 -lm
 for b in 4 8 12 16 32
 do
-        mpirun -mca btl self,tcp -np $b ./proj07
+        mpiexec -mca btl self,tcp -np $b ./proj07
 done
