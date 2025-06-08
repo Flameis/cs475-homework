@@ -9,6 +9,7 @@
 #SBATCH  --mail-type=BEGIN,END,FAIL
 #SBATCH  --mail-user=scovell@oregonstate.edu
 
+module load slurm
 module load openmpi
 mpic++ proj07.cpp -o proj07 -lm
 for b in 4 8 12 16 32
