@@ -1,4 +1,7 @@
 #!/bin/bash
 
-g++ -o proj07 proj07.cpp -lm -fopenmp
-./proj07
+mpic++ -o proj07 proj07.cpp -lm -fopenmp
+for b in 4 8 12 16 32 48 64
+do
+        mpiexec -mca btl self,tcp -np $b ./proj07
+done

@@ -9,5 +9,8 @@
 #SBATCH  --mail-type=BEGIN,END,FAIL
 #SBATCH  --mail-user=scovell@oregonstate.edu
 
-g++ -o proj07 proj07.cpp -lm -fopenmp
-./proj07
+mpic++ -o proj07 proj07.cpp -lm -fopenmp
+for b in 4 8 16 32 64
+do
+        mpiexec -mca btl self,tcp -np $b ./proj07
+done
