@@ -5,44 +5,16 @@
 **Project Name:** OpenCL Quadratic Regression  
 **Machine:** `rabbit.engr.oregonstate.edu`
 
-## System Specifications
-**Machine:** [Your machine specifications - CPU, GPU, RAM, OS]
+## Performance Analysis
 
-## Results
+### Performance Data
+![alt text](image.png)
 
-### Performance Data Table
-| Work-group Size | Data Size | Performance Metric | Value |
-|----------------|-----------|-------------------|-------|
-| [size1] | [data1] | [metric] | [value] |
-| [size2] | [data2] | [metric] | [value] |
-| ... | ... | ... | ... |
+### Performance Patterns and Observations
 
-### Performance Graphs
-[Insert your graphs here showing performance curves]
+Performance seems to peak at 32 Work Elements until 256 Work Elements, where it goes up again. Performance also increases as the Data Size increases because the GPU is able to handle larger data sets more efficiently due to less relative overhead. The patterns look like this because 32 Work Elements is the optimal number for the GPU to handle until 256, and the GPU can process larger data sets more efficiently due to its parallel processing capabilities.
 
-## Analysis
-
-### Performance Patterns
-**Data Size Impact:**
-- [Describe how performance changes with different amounts of data]
-- [Explain any trends you observe]
-
-**Work-group Size Impact:**
-- [Describe how performance changes with different work-group sizes]
-- [Note any optimal work-group sizes]
-
-### Pattern Explanation
-**Why these patterns occur:**
-- [Explain the underlying reasons for the performance patterns]
-- [Consider factors like memory bandwidth, cache usage, parallelization efficiency]
-- [Discuss any bottlenecks or limitations you observed]
-
-## Calculated Values
-- **Q:** [X.X]
-- **L:** [X.X] 
-- **C:** [X.X]
-
-*Note: Values rounded to one decimal place as specified*
-
-## Conclusions
-[Summarize your key findings and insights]
+### Calculated Values
+- **Q:** [1.5]
+- **L:** [3.5] 
+- **C:** [9.0]
