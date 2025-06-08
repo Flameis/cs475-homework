@@ -12,6 +12,6 @@
 module load openmpi
 for b in 4 8 12 16 32
 do
-    mpic++ proj07.cpp -o proj07 -lm
-    mpiexec -mca btl self,tcp -n $b ./proj07
+    /usr/bin/perl mpic++ proj07.cpp -o proj07 -lm
+    /usr/bin/perl mpiexec -mca btl self,tcp -n $b ./proj07
 done
