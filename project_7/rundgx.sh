@@ -9,7 +9,7 @@
 #SBATCH  --mail-type=BEGIN,END,FAIL
 #SBATCH  --mail-user=scovell@oregonstate.edu
 module load openmpi
-mpic++ -o proj07 proj07.cpp -lm -fopenmp
+mpic++ -o proj07 proj07.cpp
 for b in 4 8 12 16 32
 do
         mpiexec -mca btl self,tcp -np $b ./proj07
