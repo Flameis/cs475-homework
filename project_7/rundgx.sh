@@ -11,6 +11,7 @@
 unset PERL5LIB
 export PERL5LIB=""
 
+module load perl
 module load openmpi
 mpic++ proj07.cpp -o proj07 -lm
 for b in 4 8 12 16 32
