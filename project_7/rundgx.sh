@@ -10,8 +10,9 @@
 #SBATCH --mail-user=scovell@oregonstate.edu
 
 module load openmpi
-for b in 4 8 12 16 32
+mpic++ proj07.cpp -o proj07 -lm
+
+for b in 1 2 4 6 8
 do
-    /usr/bin/perl mpic++ proj07.cpp -o proj07 -lm
-    /usr/bin/perl mpiexec -mca btl self,tcp -n $b ./proj07
+    mpiexec -mca btl self,tcp -np $b ./proj07
 done

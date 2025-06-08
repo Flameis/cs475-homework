@@ -105,6 +105,7 @@ main( int argc, char *argv[ ] )
 		}
 
 		fread( BigSignal, sizeof(float), NUMELEMENTS, fp );
+		fclose( fp );
 #endif
 	}
 
