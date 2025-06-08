@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH  -J  Proj07
-#SBATCH  -A  cs475-575
-#SBATCH  -p  classmpitest
-#SBATCH  --constraint=v100
-#SBATCH  --gres=gpu:1
-#SBATCH  -o  proj07.out
-#SBATCH  -e  proj07.err
+#SBATCH -J Fourier
+#SBATCH -A cs475-575
+#SBATCH -p classmpitest
+#SBATCH -N 8 # number of nodes
+#SBATCH -n 8 # number of tasks
+#SBATCH -o mpiproject.out
+#SBATCH -e mpiproject.err
 #SBATCH  --mail-type=BEGIN,END,FAIL
 #SBATCH  --mail-user=scovell@oregonstate.edu
 module load openmpi
