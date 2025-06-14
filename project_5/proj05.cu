@@ -211,7 +211,7 @@ main( int argc, char* argv[ ] )
 	int numHits = 0;
 	for(int i = 0; i < NUMTRIALS; i++ )
 	{
-		numHits += dhits[i];
+		numHits += hhits[i];
 	}
 
 	// compute the probability:
