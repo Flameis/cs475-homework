@@ -1,0 +1,22 @@
+# Ignore executable files
+*.exe
+
+# Common C/C++ build artifacts
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+*.dylib
+
+# Debug files
+*.pdb
+*.ilk
+
+# Build directories
+build/
+debug/
+release/
+bin/
+obj/
